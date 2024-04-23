@@ -5,6 +5,8 @@ import pandas as pd
 from DataProcessor import *
 from StatisticsLibrary import *
 from SolutionChecker import *
+from SQLServerImportSet1 import *
+from SQLServerImportSet2 import *
 import matplotlib.pyplot as plt
 
 
@@ -28,6 +30,15 @@ def main():
 
 	print("WELCOME TO THE DATA CLEANER!")
 	fileName = input("\nEnter the File Name for the data to be processed: ")
+
+	import1 = SQLServerImportSet1
+	import2 = SQLServerImportSet2
+
+	#Read csv file and import to specific db table based on user input
+	if fileName == "Dataset1.csv":
+		import1.import_csv_tosql()
+	else:
+		import2.import_csv_tosql()
 
 	#Read CSV file into a pandas Data Frame
 	df = loadData(fileName)
