@@ -18,7 +18,7 @@ class SQLServerImportSet1:
 
         #Step 3. Create SQL Server Connection string
         DRIVER = 'SQL Server'
-        SERVER_NAME = 'BOWEN'
+        SERVER_NAME = 'JC-ZENBOOK'
         DATABASE_NAME = 'testdb'
 
         def connection_string (driver, server_name, database_name):
@@ -57,7 +57,7 @@ class SQLServerImportSet1:
             print(str(e[1]))
 
         finally:
-            print('Data Imported to Database.')
+            print('Data Imported to Database.\n\n')
             cursor.close()
             conn.close()
 

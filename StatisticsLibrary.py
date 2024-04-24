@@ -1,7 +1,4 @@
-import numpy as np
 from scipy.optimize import curve_fit
-import pandas as pd
-import matplotlib.pyplot as plt
 
 class StatisticsLibrary:
 	idxList = []

@@ -1,7 +1,6 @@
 ''' The purpose of this module is to perform operations on the uploaded data '''
 
 import matplotlib.pyplot as plt
-import pandas as pd
 
 class DataProcessor:
 	def __init__(self, inputDF):

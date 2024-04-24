@@ -7,7 +7,6 @@ from StatisticsLibrary import *
 from SolutionChecker import *
 from SQLServerImportSet1 import *
 from SQLServerImportSet2 import *
-import matplotlib.pyplot as plt
 
 
 def displayMenu():
@@ -24,21 +23,22 @@ def loadData(fileName):
 	df.columns = ['x','y']
 	print(df)
 	print("\nData upload successful!\n")
+
+	#Read csv file and import to specific db table based on user input
+	import1 = SQLServerImportSet1
+	import2 = SQLServerImportSet2
+	
+	if fileName == "Dataset1.csv":
+		import1.import_csv_tosql()
+	else:
+		import2.import_csv_tosql()
+
 	return df
 
 def main():
 
 	print("WELCOME TO THE DATA CLEANER!")
 	fileName = input("\nEnter the File Name for the data to be processed: ")
-
-	import1 = SQLServerImportSet1
-	import2 = SQLServerImportSet2
-
-	#Read csv file and import to specific db table based on user input
-	if fileName == "Dataset1.csv":
-		import1.import_csv_tosql()
-	else:
-		import2.import_csv_tosql()
 
 	#Read CSV file into a pandas Data Frame
 	df = loadData(fileName)
