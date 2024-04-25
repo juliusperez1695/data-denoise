@@ -1,5 +1,8 @@
 import pypyodbc as odbc #pip install pypyodbc
+import pyodbc
 import pandas as pd #pip install pandas
+from sqlalchemy import create_engine
+import urllib
 
 class SQLServerImportSet1:
     
@@ -14,6 +17,7 @@ class SQLServerImportSet1:
 
         df_data = df[columns]
         records = df_data.values.tolist()
+        print(records)
 
 
         #Step 3. Create SQL Server Connection string
@@ -44,9 +48,10 @@ class SQLServerImportSet1:
         #Step 3.3 Create  cursor connection
         sql_insert = '''
             INSERT INTO [dbo].[Dataset1]
-            VALUES (?, ?)
+            VALUES (?,?)
         '''
-
+        
+        # write the DataFrame to a table in the sql database
         try:
             cursor = conn.cursor()
             cursor.executemany(sql_insert, records)

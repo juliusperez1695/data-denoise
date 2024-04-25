@@ -1,12 +1,11 @@
 ''' This file will prompt the user for input,  asking for the folder path containing 
 	the data file.  It will then call on the required modules to perform data cleaning. '''
 
-import pandas as pd
+import os
 from DataProcessor import *
 from StatisticsLibrary import *
 from SolutionChecker import *
-from SQLServerImportSet1 import *
-from SQLServerImportSet2 import *
+from DB_Configuration import *
 
 
 def displayMenu():
@@ -18,30 +17,21 @@ def displayMenu():
 	for choice in menu:
 		print(str(choice) + " " + menu[choice])
 
-def loadData(fileName):
-	df = pd.read_csv(fileName, header=None)
-	df.columns = ['x','y']
-	print(df)
-	print("\nData upload successful!\n")
-
-	#Read csv file and import to specific db table based on user input
-	import1 = SQLServerImportSet1
-	import2 = SQLServerImportSet2
-	
-	if fileName == "Dataset1.csv":
-		import1.import_csv_tosql()
-	else:
-		import2.import_csv_tosql()
-
-	return df
 
 def main():
-
-	print("WELCOME TO THE DATA CLEANER!")
-	fileName = input("\nEnter the File Name for the data to be processed: ")
-
-	#Read CSV file into a pandas Data Frame
-	df = loadData(fileName)
+	#Clears terminal at program start
+	os.system('cls' if os.name == 'nt' else 'clear')
+	
+	################################################
+	
+	print("\nWELCOME TO THE DATA CLEANER!\n")
+	
+	#Prompts User to Provide SQL Server, Database, and DB Table Information for Data Access
+	DB1 = DB_Configuration()
+	DB1.getUserConfig()
+	
+	#Stores DB Table into pandas dataframe
+	df = DB1.getData()
 
 	#Creates DataProcessor object for performing operations on the Data Frame
 	DP = DataProcessor(df)
@@ -82,8 +72,10 @@ def main():
 				print("Cleaned Extrema Location: " + str(df_clean['x'].iloc[df_clean_idx]) + "\n\n")
 				SC.plotSummary(df, df_clean)
 			case 4:
-				fileName = input("\nEnter the File Name for the data to be processed: ")
-				df = loadData(fileName)
+				#Re-enters Database for accessing of new dataset
+				DB1 = DB_Configuration()
+				DB1.getUserConfig()
+				df = DB1.getData()
 				DP = DataProcessor(df)
 				SL = StatisticsLibrary(df)
 				SL.resetIdxList()

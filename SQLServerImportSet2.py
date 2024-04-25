@@ -44,7 +44,7 @@ class SQLServerImportSet2:
         #Step 3.3 Create  cursor connection
         sql_insert = '''
             INSERT INTO [dbo].[Dataset2]
-            VALUES (?, ?)
+            VALUES (?,?)
         '''
 
         try:
