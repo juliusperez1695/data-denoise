@@ -2,6 +2,7 @@ import pandas as pd
 import pypyodbc as odbc
 
 class DB_Configuration:
+    #Creates SQL Server connection string
     def connection_string (self, driver, server_name, database_name):
             conn_string = f"""
                 DRIVER={{{driver}}};
@@ -11,8 +12,10 @@ class DB_Configuration:
             """
             return conn_string
     
+    #Establishes server connection based on user input for required information and obtains data
     def getUserConfig(self):
         print("To Access Your Data . . . ")
+        #Enter these as you would in the server connection string
         driver = input("Enter DRIVER: ")
         server = input("Enter SERVER: ")
         database = input("Enter DATABASE: ")
@@ -28,12 +31,12 @@ class DB_Configuration:
             print(str(e.value[1]))
 
         dataset = input("Which Dataset do you want to access?: ")
-        query = "SELECT * FROM [dbo].[%s]" % dataset
+        query = "SELECT * FROM [dbo].[%s]" % dataset #Enter 'Dataset1' or 'Dataset2'
         cursor = conn.cursor()
         cursor.execute(query)
         cursor.fetchall()
         df_init = pd.read_sql(query, conn)
-        self.df = df_init[['x', 'y']]
+        self.df = df_init[['x', 'y']] #Columns MUST be labeled as such in the DB Table
 
     def getData(self):
          return self.df
