@@ -22,21 +22,18 @@ class DB_Configuration:
         
         try:
             conn = odbc.connect(self.connection_string(driver, server, database))
-            print("Connected to Database!")
+            print("Connected to Database!\n")
+            dataset = input("Which Dataset do you want to access?: ")
+            query = "SELECT * FROM [dbo].[%s]" % dataset #Enter 'Dataset1' or 'Dataset2'
+            cursor = conn.cursor()
+            cursor.execute(query)
+            cursor.fetchall()
+            df_init = pd.read_sql(query, conn)
+            self.df = df_init[['x', 'y']] #Columns MUST be labeled as such in the DB Table
         except odbc.DatabaseError as e:
-            print('Database Error: ')
-            print(str(e.value[1]))
+            print('Database Error: ' + str(e.value[1]))
         except odbc.Error as e:
-            print('Connection Error:')
-            print(str(e.value[1]))
-
-        dataset = input("Which Dataset do you want to access?: ")
-        query = "SELECT * FROM [dbo].[%s]" % dataset #Enter 'Dataset1' or 'Dataset2'
-        cursor = conn.cursor()
-        cursor.execute(query)
-        cursor.fetchall()
-        df_init = pd.read_sql(query, conn)
-        self.df = df_init[['x', 'y']] #Columns MUST be labeled as such in the DB Table
+            print('Connection Error: ' + str(e.value[1]))
 
     def getData(self):
          return self.df
