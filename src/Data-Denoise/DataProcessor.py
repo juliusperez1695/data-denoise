@@ -33,8 +33,8 @@ class DataProcessor:
 	def printData(self):
 		print(self.newDF)
 
-	def getCleanData():
+	def getCleanData(self):
 		return self.newDF
 
-	def getOrigData():
+	def getOrigData(self):
 		return self.origDF

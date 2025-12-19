@@ -24,7 +24,7 @@ def main():
 	
 	################################################
 	
-	print("\nWELCOME TO THE DATA CLEANER!\n")
+	print("\nWELCOME TO DATA DENOISE!\n")
 	
 	#Prompts User to Provide SQL Server, Database, and DB Table Information for Data Access
 	DB1 = DB_Configuration()
