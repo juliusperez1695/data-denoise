@@ -20,6 +20,8 @@ class DataProcessor:
 
 		self.origDF = df
 		self.newDF = df
+
+		return df
 	
 	def plotData(self):
 		plt.figure(figsize=(9,5))
