@@ -1,13 +1,11 @@
 from DataDenoise import DataDenoiser
-from DataProcessor import DataProcessor
 from time import sleep
 
 class DataDenoiseUI:
     def Initialize(self):
         denoiser = DataDenoiser()
-        dataprocessor = DataProcessor()
 
-        self.fit_type_menu = Menu("Data Denoise: Choose a Fitting Method\nThis will be used to identify and remove outliers from your dataset.",
+        fit_type_menu = Menu("Data Denoise: Choose a Fitting Method\nThis will be used to identify and remove outliers from your dataset.",
                          {
                             '1': {'text':"Parabolic",
                                    'action':denoiser.Run_OutlierRemoval,
@@ -16,30 +14,32 @@ class DataDenoiseUI:
                                   'action':quit}
                          }, exit_msg="")
         
-        self.proc_menu = Menu("Data Denoise: Data Processing Menu",
+        proc_menu = Menu("Data Denoise: Data Processing Menu",
                          {
                             '1': {'text':"Plot Imported Data",
                                    'action':denoiser.Run_Plotter},
                             '2': {'text':"Handle Outliers",
-                                  'action':self.fit_type_menu.Run},
+                                  'action':fit_type_menu.Run},
                             '3': {'text':"Check Solution",
                                   'action':denoiser.Run_SolutionCheck},
                             'Q': {'text':"Return to MAIN MENU",
                                   'action':quit}
                          }, exit_msg="")
         
-        self.MAIN_MENU = Menu("Welcome!\n\nData Denoise: MAIN MENU",
+        MAIN_MENU = Menu("Welcome!\n\nData Denoise: MAIN MENU",
                          {
                             '1': {'text':"Import Data",
                                    'action':denoiser.importData},
                             '2': {'text':"Process Data",
-                                  'action':self.proc_menu.Run},
+                                  'action':proc_menu.Run},
                             'Q': {'text':"Quit",
                                   'action':quit}
                          }, exit_msg="Program Terminated - Goodbye!")
         
-    def RUN(self):
-        self.MAIN_MENU.Run()
+        return MAIN_MENU
+        
+    def RUN(self, prog_menu):
+        prog_menu.Run()
 
 class Menu:
     def __init__(self, prompt, options, exit_msg):
