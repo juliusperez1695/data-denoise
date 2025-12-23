@@ -1,3 +1,4 @@
+import os
 from DataDenoise import DataDenoiser
 from time import sleep
 
@@ -26,7 +27,7 @@ class DataDenoiseUI:
                                   'action':quit}
                          }, exit_msg="")
         
-        MAIN_MENU = Menu("Welcome!\n\nData Denoise: MAIN MENU",
+        MAIN_MENU = Menu("Data Denoise: MAIN MENU",
                          {
                             '1': {'text':"Import Data",
                                    'action':denoiser.importData},
@@ -48,7 +49,7 @@ class Menu:
         self.exit_msg = exit_msg
 
     def Display(self):
-        print("\n"+self.prompt)
+        print("\n\n"+self.prompt)
         for key, value in self.options.items():
             print(f"[{key}]     {value['text']}")
 
@@ -73,6 +74,7 @@ class Menu:
 
     def Run(self):
         while True:
+            # os.system('cls' if os.name == 'nt' else 'clear')
             self.Display()
             choice = self.Get_UserChoice()
             if choice == 'Q':

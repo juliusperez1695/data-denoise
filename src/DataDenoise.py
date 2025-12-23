@@ -1,22 +1,6 @@
-import os
+from time import sleep
 from DataProcessor import *
 from SolutionChecker import *
-from UserInterface import *
-
-############################################
-#~Data Denoise MAIN - Runs the application~#
-############################################
-def main():
-	# Clear terminal at program start
-	os.system('cls' if os.name == 'nt' else 'clear')
-	
-	# Initialize and run the program's user interface
-	denoiseUI = DataDenoiseUI()
-	prog_UI = denoiseUI.Initialize()
-	denoiseUI.RUN(prog_UI)
-
-if __name__ == "__main__":
-	main()
 
 ################################
 #~DataDenoiser CLASS defintion~#
@@ -29,9 +13,11 @@ class DataDenoiser:
 
 	def importData(self):
 		self.dataprocessor.importCSVdata(self.getDataFilepath())
+		print("\nSuccessfully imported data!")
+		sleep(1.5)
 	
 	def getDataFilepath(self):
-		datapath = input("Enter the complete file path for your dataset: ")
+		datapath = input("\nEnter the complete file path for your dataset: ")
 		return datapath
 	
 	def Run_Plotter(self):
@@ -41,10 +27,12 @@ class DataDenoiser:
 		outlierIndexList = self.dataprocessor.identifyOutliers(fit_mode)
 		df_denoise = self.dataprocessor.removeOutliers(outlierIndexList)
 		print("\nNumber of Outliers Removed: " + str(len(outlierIndexList)) + "\n\n")
+		sleep(1.5)
 		print("Return to Data Processing Menu to check solution.")
 		self.dataprocessor.updateData(df_denoise)
 
 		self.fit_mode = fit_mode
+		sleep(1.5)
 
 	def Run_SolutionCheck(self):
 		#Fit cleaned data, Fit original data, and compare key values (max/min values and locations)
@@ -67,4 +55,6 @@ class DataDenoiser:
 		print("Cleaned Extrema: " + str(df_denoise_Extrema))
 		print("Cleaned Extrema Location: " + str(df_denoise.iloc[:,0].iloc[df_denoise_idx]) + "\n\n")
 		solution_check.plotSummary(df, df_denoise)
+		print("\n\nReturning to Data Processing Menu . . . ")
+		sleep(1.5)
 

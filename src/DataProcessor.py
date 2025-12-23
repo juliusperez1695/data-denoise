@@ -3,11 +3,14 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.optimize import curve_fit
+import numpy as np
 
 class DataProcessor:
 	
 	def __init__(self):
-		None
+		self.idxList = []
+		self.origDF = pd.DataFrame()
+		self.newDF = pd.DataFrame()
 
 	def importCSVdata(self, data_file_path):
 		# clear dataframes for each new import
@@ -15,8 +18,6 @@ class DataProcessor:
 		self.origDF = pd.DataFrame()
 		self.newDF = pd.DataFrame()
 		df = pd.read_csv(data_file_path, header=None, float_precision='round_trip')
-		# x_data = df.iloc[:,0]
-		# y_data = df.iloc[:,1]
 
 		self.origDF = df
 		self.newDF = df
@@ -40,15 +41,25 @@ class DataProcessor:
 
 		plt.show()
 
+	def calculateRSS(self, fit_values, data_values):
+		N = np.size(fit_values)
+		residuals = fit_values - data_values
+		rss = np.sqrt(np.sum(residuals**2))
+
+		return rss
+	
 	def identifyOutliers(self, fit_mode : int = 1):
 		#Fits the original data using the preferred fitting method
 		#Identifies outliers based on original data's distance from fit value
 		fit_type = self.getFitType(fit_mode)
 		fit_Yvalues = self.getFitValues(fit_type, self.origDF.iloc[:,0], self.origDF.iloc[:,1])
-		dist2fit = abs(fit_Yvalues - self.origDF.iloc[:,1])
+		dist2fit = abs(100*(fit_Yvalues - (self.origDF.iloc[:,1])))
+		rss = self.calculateRSS(fit_Yvalues, self.origDF.iloc[:,1])
+		# print(pd.DataFrame(list(zip(fit_Yvalues, self.origDF.iloc[:,1].to_list(), dist2fit/rss))))
+		# print(f"RSS = {rss}")
 		currIdx = 0
 		for d in dist2fit:
-			if d > 10:
+			if d/rss > 20:
 				self.idxList.append(currIdx)
 			currIdx += 1
 		return self.idxList
