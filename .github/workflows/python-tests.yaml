@@ -33,7 +33,6 @@ jobs:
           # Point to the directory containing your application code and installed libraries if necessary
           path: |
             .
-            !venv/
   test:
     strategy:
       matrix:
@@ -51,7 +50,6 @@ jobs:
           name: my-artifact-${{ matrix.os }}-python-${{ matrix.python-version }}
           path: |
             .
-            !venv/
       - name: Install pytest
         run: |
           pip install pytest
