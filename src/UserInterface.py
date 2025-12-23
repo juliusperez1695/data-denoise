@@ -74,7 +74,7 @@ class Menu:
 
     def Run(self):
         while True:
-            # os.system('cls' if os.name == 'nt' else 'clear')
+            os.system('cls' if os.name == 'nt' else 'clear')
             self.Display()
             choice = self.Get_UserChoice()
             if choice == 'Q':

@@ -3,7 +3,7 @@ from DataProcessor import *
 
 def test_csv_import():
     dataproc = DataProcessor()
-    datapath = r"Data_Files\Dataset1.csv"
+    datapath = r"Data_Files/Dataset1.csv"
     df = dataproc.importCSVdata(datapath)
     num_rows = len(df)
     num_cols = len(df.columns)

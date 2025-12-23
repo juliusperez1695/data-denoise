@@ -32,14 +32,15 @@ class DataDenoiser:
 		self.dataprocessor.updateData(df_denoise)
 
 		self.fit_mode = fit_mode
-		sleep(1.5)
+		sleep(4)
 
 	def Run_SolutionCheck(self):
 		#Fit cleaned data, Fit original data, and compare key values (max/min values and locations)
 		df = self.dataprocessor.getOrigData()
+		y_dfFit = self.dataprocessor.getInitFitResults()
+		
 		df_denoise = self.dataprocessor.getDenoiseData()
 		fit_type = self.dataprocessor.getFitType(self.fit_mode)
-		y_dfFit = self.dataprocessor.getFitValues(fit_type, df.iloc[:,0], df.iloc[:,1])
 		y_dfDenoiseFit = self.dataprocessor.getFitValues(fit_type, df_denoise.iloc[:,0], df_denoise.iloc[:,1])
 		
 		#Creates SolutionChecker object for performing fitting method and locating extrema
@@ -52,9 +53,9 @@ class DataDenoiser:
 		#Display Results
 		print("\nOriginal Extrema: " + str(df_Extrema))
 		print("Original Extrema Location: " + str(df.iloc[:,0].iloc[df_idx]))
-		print("Cleaned Extrema: " + str(df_denoise_Extrema))
-		print("Cleaned Extrema Location: " + str(df_denoise.iloc[:,0].iloc[df_denoise_idx]) + "\n\n")
-		solution_check.plotSummary(df, df_denoise)
+		print("Denoised Extrema: " + str(df_denoise_Extrema))
+		print("Denoised Extrema Location: " + str(df_denoise.iloc[:,0].iloc[df_denoise_idx]) + "\n\n")
+		self.dataprocessor.plotData()
 		print("\n\nReturning to Data Processing Menu . . . ")
-		sleep(1.5)
+		sleep(4)
 

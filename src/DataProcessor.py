@@ -4,6 +4,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.optimize import curve_fit
 import numpy as np
+from time import sleep
+
+from numpy import typing as npt
+from typing import List
 
 class DataProcessor:
 	
@@ -11,8 +15,9 @@ class DataProcessor:
 		self.idxList = []
 		self.origDF = pd.DataFrame()
 		self.newDF = pd.DataFrame()
+		self.init_fit_results = np.array([])
 
-	def importCSVdata(self, data_file_path):
+	def importCSVdata(self, data_file_path : str):
 		# clear dataframes for each new import
 		self.idxList = []
 		self.origDF = pd.DataFrame()
@@ -39,9 +44,11 @@ class DataProcessor:
 		plt.xlabel('x values')
 		plt.ylabel('y values')
 
+		print("**Close plot window to continue**\n\n")
+		
 		plt.show()
 
-	def calculateRSS(self, fit_values, data_values):
+	def calculateRSS(self, fit_values : npt.NDArray[np.float64], data_values : npt.NDArray[np.float64]):
 		N = np.size(fit_values)
 		residuals = fit_values - data_values
 		rss = np.sqrt(np.sum(residuals**2))
@@ -49,12 +56,15 @@ class DataProcessor:
 		return rss
 	
 	def identifyOutliers(self, fit_mode : int = 1):
-		#Fits the original data using the preferred fitting method
-		#Identifies outliers based on original data's distance from fit value
+		'''
+		- Fits the original data using the preferred fitting method specified by fit_mode
+		- Identifies outliers based on Residual Sum of Squares (RSS) of original data 
+			and compares to each data point's distance from the corresponding fit value
+		'''
 		fit_type = self.getFitType(fit_mode)
-		fit_Yvalues = self.getFitValues(fit_type, self.origDF.iloc[:,0], self.origDF.iloc[:,1])
-		dist2fit = abs(100*(fit_Yvalues - (self.origDF.iloc[:,1])))
-		rss = self.calculateRSS(fit_Yvalues, self.origDF.iloc[:,1])
+		self.init_fit_results = self.getFitValues(fit_type, self.origDF.iloc[:,0], self.origDF.iloc[:,1])
+		dist2fit = abs(100*(self.init_fit_results - (self.origDF.iloc[:,1])))
+		rss = self.calculateRSS(self.init_fit_results, np.array(self.origDF.iloc[:,1]))
 		# print(pd.DataFrame(list(zip(fit_Yvalues, self.origDF.iloc[:,1].to_list(), dist2fit/rss))))
 		# print(f"RSS = {rss}")
 		currIdx = 0
@@ -64,7 +74,7 @@ class DataProcessor:
 			currIdx += 1
 		return self.idxList
 		
-	def removeOutliers(self, outlierLoc):
+	def removeOutliers(self, outlierLoc : List[int]):
 		for loc in outlierLoc:
 			self.newDF = self.newDF.drop(loc)
 		return self.newDF
@@ -102,3 +112,6 @@ class DataProcessor:
 
 	def getOrigData(self):
 		return self.origDF
+	
+	def getInitFitResults(self):
+		return self.init_fit_results
