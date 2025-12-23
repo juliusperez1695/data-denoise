@@ -49,7 +49,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: my-artifact-${{ matrix.os }}-python-${{ matrix.python-version }}
-          path: .
+          path: |
+            .
+            !venv/
       - name: Install pytest
         run: |
           pip install pytest
