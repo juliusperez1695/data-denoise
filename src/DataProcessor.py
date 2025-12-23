@@ -115,3 +115,6 @@ class DataProcessor:
 	
 	def getInitFitResults(self):
 		return self.init_fit_results
+	
+	def setOrigData(self, input_df):
+		self.origDF = input_df

@@ -1,9 +1,12 @@
 from pandas import read_csv
+import os
 from DataProcessor import *
 
 def test_csv_import():
     dataproc = DataProcessor()
     datapath = r"Data_Files/Dataset1.csv"
+    assert os.path.exists(datapath), f"FAILED locating CSV file in {datapath}"
+
     df = dataproc.importCSVdata(datapath)
     num_rows = len(df)
     num_cols = len(df.columns)
