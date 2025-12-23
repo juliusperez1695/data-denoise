@@ -26,13 +26,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e .
 
+      - run: mkdir artifact_dir
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: my-artifact-${{ matrix.os }}-python-${{ matrix.python-version }}
-          # Point to the directory containing your application code and installed libraries if necessary
-          path: |
-            .
+          path: artifact_dir
   test:
     strategy:
       matrix:
@@ -48,8 +47,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: my-artifact-${{ matrix.os }}-python-${{ matrix.python-version }}
-          path: |
-            .
       - name: Install pytest
         run: |
           pip install pytest
