@@ -54,7 +54,10 @@ class DataProcessor:
 
         plt.show()
 
-    def calculate_rss(self, fit_values : npt.NDArray[np.float64], data_values : npt.NDArray[np.float64]):
+    def calculate_rss(
+        self, fit_values : npt.NDArray[np.float64],
+        data_values : npt.NDArray[np.float64]
+    ):
         '''
         <insert necessary documentation here>
         '''
@@ -101,7 +104,7 @@ class DataProcessor:
         '''
         <insert necessary documentation here>
         '''
-        popt, pcov = curve_fit(fit_type, x_values, y_values)
+        popt, _ = curve_fit(fit_type, x_values, y_values)
         return self.parabola_fit(x_values, *popt)
 
     def get_fit_type(self, fit_mode : int):

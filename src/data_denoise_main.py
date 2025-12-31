@@ -8,7 +8,9 @@ from user_interface import DataDenoiseUI
 #~Data Denoise MAIN - Runs the application~#
 ############################################
 def main():
-
+    '''
+    <insert necessary documentation here>
+    '''
     # Initialize and run the program's user interface
     denoise_ui = DataDenoiseUI()
     prog_ui = denoise_ui.initialize()

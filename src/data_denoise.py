@@ -45,7 +45,9 @@ class DataDenoiser:
         sleep(4)
 
     def run_solution_check(self):
-        ''' Compares and validates the processed solution against the original data and expected solution '''
+        '''
+        Compares and validates the processed solution against the original data and expected solution
+        '''
         #Fit cleaned data, Fit original data, and compare key values (max/min values and locations)
         df = self.dataprocessor.get_orig_data()
         y_df_fit = self.dataprocessor.get_init_fit_results()

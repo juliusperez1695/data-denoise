@@ -77,20 +77,20 @@ class Menu:
         '''
         <insert necessary documentation here>
         '''
-        while True:
+        run_loop = True
+        while run_loop:
             choice = input("\nSelect from the options above: ").upper()
 
             if choice == 'Q':
                 print("\n"+self.exit_msg)
-                break
+                run_loop = False
             elif choice in self.options and choice != 'Q':
                 print("\nRunning \""+self.options[choice]['text']+"\"")
                 sleep(1.5)
-                break
+                run_loop = False
             else:
                 print("Invalid input - try again.")
                 sleep(1.5)
-                continue
         return choice
 
     def run_user_choice(self, choice):

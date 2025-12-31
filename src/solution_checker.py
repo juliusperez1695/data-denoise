@@ -21,3 +21,8 @@ class SolutionChecker:
             extr_idx = data.idxmax()
             extr = data.max()
         return extr_idx, extr
+
+    def find_critical_point(self, data):
+        '''
+        <insert necessary documentation here>
+        '''
