@@ -27,10 +27,10 @@ class DataProcessor:
         self.newDF = df
 
         return df
-    
+
     def plotData(self):
         plt.figure(figsize=(9,5))
-        
+
         plt.subplot(121)
         plt.plot(self.origDF.iloc[:,0], self.origDF.iloc[:,1], 'ro')
         plt.title('Original Data')
@@ -44,7 +44,7 @@ class DataProcessor:
         plt.ylabel('y values')
 
         print("**Close plot window to continue**\n\n")
-        
+
         plt.show()
 
     def calculateRSS(self, fit_values : npt.NDArray[np.float64], data_values : npt.NDArray[np.float64]):
@@ -53,11 +53,11 @@ class DataProcessor:
         rss = np.sqrt(np.sum(residuals**2))
 
         return rss
-    
+
     def identifyOutliers(self, fit_mode : int = 1):
         '''
         - Fits the original data using the preferred fitting method specified by fit_mode
-        - Identifies outliers based on Residual Sum of Squares (RSS) of original data 
+        - Identifies outliers based on Residual Sum of Squares (RSS) of original data
             and compares to each data point's distance from the corresponding fit value
         '''
         fit_type = self.getFitType(fit_mode)
@@ -72,7 +72,7 @@ class DataProcessor:
                 self.idxList.append(currIdx)
             currIdx += 1
         return self.idxList
-        
+
     def removeOutliers(self, outlierLoc : List[int]):
         for loc in outlierLoc:
             self.newDF = self.newDF.drop(loc)
@@ -92,10 +92,10 @@ class DataProcessor:
             fit_type = self.parabolaFit
 
         return fit_type
-    
+
     def resetIdxList(self):
         self.idxList = []
-    
+
     def updateData(self, df):
         self.newDF = df
 
@@ -110,9 +110,9 @@ class DataProcessor:
 
     def getOrigData(self):
         return self.origDF
-    
+
     def getInitFitResults(self):
         return self.init_fit_results
-    
+
     def setOrigData(self, input_df):
         self.origDF = input_df

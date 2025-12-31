@@ -5,7 +5,7 @@ from UserInterface import *
 #~Data Denoise MAIN - Runs the application~#
 ############################################
 def main():
-    
+
     # Initialize and run the program's user interface
     denoiseUI = DataDenoiseUI()
     prog_UI = denoiseUI.Initialize()
