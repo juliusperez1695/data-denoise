@@ -2,9 +2,9 @@
 <insert necessary documentation here>
 '''
 
-from data_processor import DataProcessor
-import pandas as pd
 import os
+import pandas as pd
+from data_processor import DataProcessor
 
 def test_parabola_outliers():
     '''

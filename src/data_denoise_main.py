@@ -2,7 +2,6 @@
 <insert necessary documentation here>
 '''
 
-import os
 from user_interface import DataDenoiseUI
 
 ############################################

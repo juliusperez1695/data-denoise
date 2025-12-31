@@ -1,13 +1,11 @@
 ''' The purpose of this module is to perform operations on the uploaded data '''
 
+from typing import List
 import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.optimize import curve_fit
 import numpy as np
-from time import sleep
-
 from numpy import typing as npt
-from typing import List
 
 class DataProcessor:
     '''

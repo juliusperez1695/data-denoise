@@ -3,8 +3,8 @@
 '''
 
 import os
-from data_denoise import DataDenoiser
 from time import sleep
+from data_denoise import DataDenoiser
 
 class DataDenoiseUI:
     '''
@@ -16,7 +16,8 @@ class DataDenoiseUI:
         '''
         denoiser = DataDenoiser()
 
-        fit_type_menu = Menu("Data Denoise: Choose a Fitting Method\nThis will be used to identify and remove outliers from your dataset.",
+        fit_type_menu_info = "This will be used to identify and remove outliers from your dataset."
+        fit_type_menu = Menu("Data Denoise: Choose a Fitting Method\n"+fit_type_menu_info,
                          {
                             '1': {'text':"Parabolic",
                                    'action':denoiser.run_outlier_removal,
@@ -81,14 +82,16 @@ class Menu:
 
             if choice == 'Q':
                 print("\n"+self.exit_msg)
-                return choice
+                break
             elif choice in self.options and choice != 'Q':
                 print("\nRunning \""+self.options[choice]['text']+"\"")
                 sleep(1.5)
-                return choice
+                break
             else:
                 print("Invalid input - try again.")
                 sleep(1.5)
+                continue
+        return choice
 
     def run_user_choice(self, choice):
         '''
