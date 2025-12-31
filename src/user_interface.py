@@ -104,11 +104,12 @@ class Menu:
         '''
         <insert necessary documentation here>
         '''
-        while True:
+        run_loop = True
+        while run_loop:
             os.system('cls' if os.name == 'nt' else 'clear')
             self.display()
             choice = self.get_user_choice()
             if choice == 'Q':
-                break
+                run_loop = False
             else:
                 self.run_user_choice(choice)
