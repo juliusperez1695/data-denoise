@@ -2,6 +2,9 @@
 requires = ["setuptools>=42.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.packages.find]
+where = ["src"] # Looks for packages in the src/ directory
+
 [project]
 name = "DataDenoise"
 version = "0.1.0"
