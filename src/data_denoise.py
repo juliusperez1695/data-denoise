@@ -1,3 +1,7 @@
+'''
+<insert necessary documentation here>
+'''
+
 from time import sleep
 from data_processor import DataProcessor
 from solution_checker import SolutionChecker
@@ -29,6 +33,7 @@ class DataDenoiser:
         self.dataprocessor.plot_data()
 
     def run_outlier_removal(self, fit_mode : int = 1):
+        ''' Removes outliers based on fit-type used (specified by fit_mode) '''
         outlier_index_list = self.dataprocessor.identify_outliers(fit_mode)
         df_denoise = self.dataprocessor.remove_outliers(outlier_index_list)
         print("\nNumber of Outliers Removed: " + str(len(outlier_index_list)) + "\n\n")

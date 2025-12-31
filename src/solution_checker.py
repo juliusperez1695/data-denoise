@@ -1,3 +1,7 @@
+'''
+<insert necessary documentation here>
+'''
+
 import matplotlib.pyplot as plt
 from data_processor import DataProcessor
 

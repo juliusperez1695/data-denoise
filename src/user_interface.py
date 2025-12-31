@@ -1,3 +1,7 @@
+'''
+<insert necessary documentation here>
+'''
+
 import os
 from data_denoise import DataDenoiser
 from time import sleep
