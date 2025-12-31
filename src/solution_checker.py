@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from DataProcessor import *
+from data_processor import DataProcessor
 
 class SolutionChecker:
     def __init__(self, data, denoiseData):

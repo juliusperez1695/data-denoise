@@ -1,5 +1,5 @@
 import os
-from DataDenoise import DataDenoiser
+from data_denoise import DataDenoiser
 from time import sleep
 
 class DataDenoiseUI:
@@ -14,7 +14,7 @@ class DataDenoiseUI:
                             'Q': {'text':"Return to Data Processing Menu",
                                   'action':quit}
                          }, exit_msg="")
-        
+
         proc_menu = Menu("Data Denoise: Data Processing Menu",
                          {
                             '1': {'text':"Plot Imported Data",
@@ -26,7 +26,7 @@ class DataDenoiseUI:
                             'Q': {'text':"Return to MAIN MENU",
                                   'action':quit}
                          }, exit_msg="")
-        
+
         MAIN_MENU = Menu("Data Denoise: MAIN MENU",
                          {
                             '1': {'text':"Import Data",
@@ -36,9 +36,9 @@ class DataDenoiseUI:
                             'Q': {'text':"Quit",
                                   'action':quit}
                          }, exit_msg="Program Terminated - Goodbye!")
-        
+
         return MAIN_MENU
-        
+
     def RUN(self, prog_menu):
         prog_menu.Run()
 

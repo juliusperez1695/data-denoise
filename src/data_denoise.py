@@ -1,6 +1,6 @@
 from time import sleep
-from DataProcessor import *
-from SolutionChecker import *
+from data_processor import DataProcessor
+from solution_checker import SolutionChecker
 
 ################################
 #~DataDenoiser CLASS defintion~#
@@ -39,8 +39,10 @@ class DataDenoiser:
         y_dfFit = self.dataprocessor.getInitFitResults()
 
         df_denoise = self.dataprocessor.getDenoiseData()
+        df_denoise_x = df_denoise.iloc[:,0]
+        df_denoise_y = df_denoise.iloc[:,1]
         fit_type = self.dataprocessor.getFitType(self.fit_mode)
-        y_dfDenoiseFit = self.dataprocessor.getFitValues(fit_type, df_denoise.iloc[:,0], df_denoise.iloc[:,1])
+        y_dfDenoiseFit = self.dataprocessor.getFitValues(fit_type, df_denoise_x, df_denoise_y)
 
         #Creates SolutionChecker object for performing fitting method and locating extrema
         solution_check = SolutionChecker(y_dfFit, y_dfDenoiseFit)
@@ -53,7 +55,7 @@ class DataDenoiser:
         print("\nOriginal Extrema: " + str(df_Extrema))
         print("Original Extrema Location: " + str(df.iloc[:,0].iloc[df_idx]))
         print("Denoised Extrema: " + str(df_denoise_Extrema))
-        print("Denoised Extrema Location: " + str(df_denoise.iloc[:,0].iloc[df_denoise_idx]) + "\n\n")
+        print("Denoised Extrema Location: " + str(df_denoise_x.iloc[df_denoise_idx]) + "\n\n")
         self.dataprocessor.plotData()
         print("\n\nReturning to Data Processing Menu . . . ")
         sleep(4)

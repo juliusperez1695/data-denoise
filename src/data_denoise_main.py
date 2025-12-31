@@ -1,5 +1,5 @@
 import os
-from UserInterface import *
+from user_interface import DataDenoiseUI
 
 ############################################
 #~Data Denoise MAIN - Runs the application~#
