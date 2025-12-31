@@ -6,20 +6,26 @@ from solution_checker import SolutionChecker
 #~DataDenoiser CLASS defintion~#
 ################################
 class DataDenoiser:
+    '''
+    <insert necessary documentation here>
+    '''
     def __init__(self):
         self.dataprocessor = DataProcessor()
         self.fit_mode = 0
 
     def import_data(self):
+        ''' Calls the necessary function for importing user data '''
         self.dataprocessor.import_csv_data(self.get_data_filepath())
         print("\nSuccessfully imported data!")
         sleep(1.5)
 
     def get_data_filepath(self):
+        ''' Prompts the user for a complete file path ending with file extension '.csv' '''
         datapath = input("\nEnter the complete file path for your dataset: ")
         return datapath
 
     def run_plotter(self):
+        ''' Plots the user's imported data alongside the processed data '''
         self.dataprocessor.plot_data()
 
     def run_outlier_removal(self, fit_mode : int = 1):
@@ -34,6 +40,7 @@ class DataDenoiser:
         sleep(4)
 
     def run_solution_check(self):
+        ''' Compares and validates the processed solution against the original data and expected solution '''
         #Fit cleaned data, Fit original data, and compare key values (max/min values and locations)
         df = self.dataprocessor.get_orig_data()
         y_df_fit = self.dataprocessor.get_init_fit_results()
@@ -59,4 +66,3 @@ class DataDenoiser:
         self.dataprocessor.plot_data()
         print("Returning to Data Processing Menu . . . ")
         sleep(4)
-

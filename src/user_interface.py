@@ -3,7 +3,13 @@ from data_denoise import DataDenoiser
 from time import sleep
 
 class DataDenoiseUI:
+    '''
+    <insert necessary documentation here>
+    '''
     def initialize(self):
+        '''
+        <insert necessary documentation here>
+        '''
         denoiser = DataDenoiser()
 
         fit_type_menu = Menu("Data Denoise: Choose a Fitting Method\nThis will be used to identify and remove outliers from your dataset.",
@@ -40,20 +46,32 @@ class DataDenoiseUI:
         return main_menu
 
     def run_application(self, prog_menu):
+        '''
+        <insert necessary documentation here>
+        '''
         prog_menu.run()
 
 class Menu:
+    '''
+    <insert necessary documentation here>
+    '''
     def __init__(self, prompt, options, exit_msg):
         self.prompt = prompt
         self.options = options
         self.exit_msg = exit_msg
 
     def display(self):
+        '''
+        <insert necessary documentation here>
+        '''
         print("\n\n"+self.prompt)
         for key, value in self.options.items():
             print(f"[{key}]     {value['text']}")
 
     def get_user_choice(self):
+        '''
+        <insert necessary documentation here>
+        '''
         while True:
             choice = input("\nSelect from the options above: ").upper()
 
@@ -69,10 +87,16 @@ class Menu:
                 sleep(1.5)
 
     def run_user_choice(self, choice):
+        '''
+        <insert necessary documentation here>
+        '''
         args = self.options[choice].get("args", ())
         self.options[choice]['action'](*args)
 
     def run(self):
+        '''
+        <insert necessary documentation here>
+        '''
         while True:
             os.system('cls' if os.name == 'nt' else 'clear')
             self.display()
@@ -81,4 +105,3 @@ class Menu:
                 break
             else:
                 self.run_user_choice(choice)
-
