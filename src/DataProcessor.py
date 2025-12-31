@@ -91,11 +91,6 @@ class DataProcessor:
 			fit_type = self.parabolaFit
 		else:
 			fit_type = self.parabolaFit
-		# match fit_mode:
-		# 	case 1:
-		# 		fit_type = self.parabolaFit
-		# 	case _:
-		# 		fit_type = self.parabolaFit
 
 		return fit_type
 	
