@@ -1,6 +1,6 @@
 from pandas import read_csv
 import os
-from DataProcessor import *
+from data_processor import DataProcessor
 
 def test_csv_import():
     dataproc = DataProcessor()

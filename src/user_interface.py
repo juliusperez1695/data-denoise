@@ -3,13 +3,13 @@ from data_denoise import DataDenoiser
 from time import sleep
 
 class DataDenoiseUI:
-    def Initialize(self):
+    def initialize(self):
         denoiser = DataDenoiser()
 
         fit_type_menu = Menu("Data Denoise: Choose a Fitting Method\nThis will be used to identify and remove outliers from your dataset.",
                          {
                             '1': {'text':"Parabolic",
-                                   'action':denoiser.Run_OutlierRemoval,
+                                   'action':denoiser.run_outlier_removal,
                                    'args':(1,)},
                             'Q': {'text':"Return to Data Processing Menu",
                                   'action':quit}
@@ -18,29 +18,29 @@ class DataDenoiseUI:
         proc_menu = Menu("Data Denoise: Data Processing Menu",
                          {
                             '1': {'text':"Plot Imported Data",
-                                   'action':denoiser.Run_Plotter},
+                                   'action':denoiser.run_plotter},
                             '2': {'text':"Handle Outliers",
-                                  'action':fit_type_menu.Run},
+                                  'action':fit_type_menu.run},
                             '3': {'text':"Check Solution",
-                                  'action':denoiser.Run_SolutionCheck},
+                                  'action':denoiser.run_solution_check},
                             'Q': {'text':"Return to MAIN MENU",
                                   'action':quit}
                          }, exit_msg="")
 
-        MAIN_MENU = Menu("Data Denoise: MAIN MENU",
+        main_menu = Menu("Data Denoise: MAIN MENU",
                          {
                             '1': {'text':"Import Data",
-                                   'action':denoiser.importData},
+                                   'action':denoiser.import_data},
                             '2': {'text':"Process Data",
-                                  'action':proc_menu.Run},
+                                  'action':proc_menu.run},
                             'Q': {'text':"Quit",
                                   'action':quit}
                          }, exit_msg="Program Terminated - Goodbye!")
 
-        return MAIN_MENU
+        return main_menu
 
-    def RUN(self, prog_menu):
-        prog_menu.Run()
+    def run_application(self, prog_menu):
+        prog_menu.run()
 
 class Menu:
     def __init__(self, prompt, options, exit_msg):
@@ -48,12 +48,12 @@ class Menu:
         self.options = options
         self.exit_msg = exit_msg
 
-    def Display(self):
+    def display(self):
         print("\n\n"+self.prompt)
         for key, value in self.options.items():
             print(f"[{key}]     {value['text']}")
 
-    def Get_UserChoice(self):
+    def get_user_choice(self):
         while True:
             choice = input("\nSelect from the options above: ").upper()
 
@@ -68,17 +68,17 @@ class Menu:
                 print("Invalid input - try again.")
                 sleep(1.5)
 
-    def Run_UserChoice(self, choice):
+    def run_user_choice(self, choice):
         args = self.options[choice].get("args", ())
         self.options[choice]['action'](*args)
 
-    def Run(self):
+    def run(self):
         while True:
             os.system('cls' if os.name == 'nt' else 'clear')
-            self.Display()
-            choice = self.Get_UserChoice()
+            self.display()
+            choice = self.get_user_choice()
             if choice == 'Q':
                 break
             else:
-                self.Run_UserChoice(choice)
+                self.run_user_choice(choice)
 

@@ -1,7 +1,9 @@
 Metadata-Version: 2.4
 Name: DataDenoise
 Version: 0.1.0
-Requires-Dist: numpy>=1.26.4
-Requires-Dist: scipy>=1.16.3
-Requires-Dist: pandas>=2.3.3
-Requires-Dist: matplotlib>=3.10.8
+Requires-Dist: numpy>=1.20.0
+Requires-Dist: scipy>=1.10.0
+Requires-Dist: pandas>=2.0.0
+Requires-Dist: matplotlib>=3.0.0
+Provides-Extra: test
+Requires-Dist: pytest; extra == "test"

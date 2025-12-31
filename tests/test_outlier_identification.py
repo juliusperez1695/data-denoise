@@ -1,11 +1,11 @@
-from DataProcessor import *
+from data_processor import DataProcessor
 import pandas as pd
 import os
 
 def test_parabola_outliers():
     datapath = r"Data_Files/Dataset1.csv"
     assert os.path.exists(datapath), f"FAILED to locate file path {datapath}."
-    
+
     test_df = pd.read_csv(datapath, header=None, float_precision='round_trip')
     dataprocessor = DataProcessor()
     dataprocessor.setOrigData(test_df)
@@ -16,7 +16,7 @@ def test_parabola_outliers():
 
     datapath = r"Data_Files/Dataset2.csv"
     assert os.path.exists(datapath), f"FAILED to locate file path {datapath}."
-    
+
     test_df = pd.read_csv(datapath, header=None, float_precision='round_trip')
     dataprocessor = DataProcessor()
     dataprocessor.setOrigData(test_df)

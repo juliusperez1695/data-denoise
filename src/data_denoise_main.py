@@ -7,9 +7,9 @@ from user_interface import DataDenoiseUI
 def main():
 
     # Initialize and run the program's user interface
-    denoiseUI = DataDenoiseUI()
-    prog_UI = denoiseUI.Initialize()
-    denoiseUI.RUN(prog_UI)
+    denoise_ui = DataDenoiseUI()
+    prog_ui = denoise_ui.initialize()
+    denoise_ui.run_application(prog_ui)
 
 if __name__ == "__main__":
     main()

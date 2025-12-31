@@ -2,12 +2,12 @@ import matplotlib.pyplot as plt
 from data_processor import DataProcessor
 
 class SolutionChecker:
-    def __init__(self, data, denoiseData):
-        self.origFit = data
-        self.denoiseFit = denoiseData
+    def __init__(self, data, denoise_data):
+        self.orig_fit = data
+        self.denoise_fit = denoise_data
 
-    def findExtrema(self, input):
-        if self.denoiseFit[0] > self.denoiseFit[5]:
+    def find_extrema(self, input):
+        if self.denoise_fit[0] > self.denoise_fit[5]:
             return input.idxmin(), input.min()
         else:
             return input.idxmax(), input.max()
