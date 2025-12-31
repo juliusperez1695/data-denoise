@@ -31,7 +31,6 @@ jobs:
                 pip install setuptools
                 pip install wheel
                 pip install build
-                pip install -e '.[test]'
             
             # Step 4
             - name: Build the Python application
