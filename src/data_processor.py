@@ -19,7 +19,7 @@ class DataProcessor:
 
     def import_csv_data(self, data_file_path : str):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         # clear dataframes for each new import
         self.idx_list = []
@@ -34,7 +34,7 @@ class DataProcessor:
 
     def plot_data(self):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         plt.figure(figsize=(9,5))
 
@@ -59,7 +59,7 @@ class DataProcessor:
         data_values : npt.NDArray[np.float64]
     ):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         residuals = fit_values - data_values
         rss = np.sqrt(np.sum(residuals**2))
@@ -88,7 +88,7 @@ class DataProcessor:
 
     def remove_outliers(self, outlier_loc : List[int]):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         for loc in outlier_loc:
             self.new_df = self.new_df.drop(loc)
@@ -96,20 +96,20 @@ class DataProcessor:
 
     def parabola_fit(self, x, a, b, c):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         return a + b*x + c*x**2
 
     def get_fit_values(self, fit_type, x_values, y_values):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         popt, _ = curve_fit(fit_type, x_values, y_values)
         return self.parabola_fit(x_values, *popt)
 
     def get_fit_type(self, fit_mode : int):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         if fit_mode == 1:
             fit_type = self.parabola_fit
@@ -120,48 +120,48 @@ class DataProcessor:
 
     def reset_idx_list(self):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         self.idx_list = []
 
     def update_data(self, df):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         self.new_df = df
 
     def remove_data(self, x_value):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         self.new_df = self.new_df.drop(x_value, axis='index')
 
     def print_data(self):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         print(self.new_df)
 
     def get_denoise_data(self):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         return self.new_df
 
     def get_orig_data(self):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         return self.orig_df
 
     def get_init_fit_results(self):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         return self.init_fit_results
 
     def set_orig_data(self, input_df):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         self.orig_df = input_df

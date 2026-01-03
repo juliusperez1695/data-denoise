@@ -9,7 +9,7 @@ from user_interface import DataDenoiseUI
 ############################################
 def main():
     '''
-    <insert necessary documentation here>
+    <insert helpful documentation here>
     '''
     # Initialize and run the program's user interface
     denoise_ui = DataDenoiseUI()

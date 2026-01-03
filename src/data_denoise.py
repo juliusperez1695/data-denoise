@@ -1,5 +1,5 @@
 '''
-<insert necessary documentation here>
+<insert helpful documentation here>
 '''
 
 from time import sleep
@@ -11,7 +11,7 @@ from solution_checker import SolutionChecker
 ################################
 class DataDenoiser:
     '''
-    <insert necessary documentation here>
+    <insert helpful documentation here>
     '''
     def __init__(self):
         self.dataprocessor = DataProcessor()

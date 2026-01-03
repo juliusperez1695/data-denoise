@@ -1,5 +1,5 @@
 '''
-<insert necessary documentation here>
+<insert helpful documentation here>
 '''
 
 import os
@@ -7,7 +7,7 @@ from data_processor import DataProcessor
 
 def test_csv_import():
     '''
-    <insert necessary documentation here>
+    <insert helpful documentation here>
     '''
     dataproc = DataProcessor()
     datapath = r"Data_Files/Dataset1.csv"

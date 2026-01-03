@@ -1,10 +1,10 @@
 '''
-<insert necessary documentation here>
+<insert helpful documentation here>
 '''
 
 class SolutionChecker:
     '''
-    <insert necessary documentation here>
+    <insert helpful documentation here>
     '''
     def __init__(self, data, denoise_data):
         self.orig_fit = data
@@ -12,7 +12,7 @@ class SolutionChecker:
 
     def find_extrema(self, data):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         if self.denoise_fit[0] > self.denoise_fit[5]:
             extr_idx = data.idxmin()
@@ -24,5 +24,5 @@ class SolutionChecker:
 
     def find_critical_point(self, data):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''

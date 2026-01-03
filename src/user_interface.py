@@ -1,5 +1,5 @@
 '''
-<insert necessary documentation here>
+<insert helpful documentation here>
 '''
 
 import os
@@ -8,11 +8,11 @@ from data_denoise import DataDenoiser
 
 class DataDenoiseUI:
     '''
-    <insert necessary documentation here>
+    <insert helpful documentation here>
     '''
     def initialize(self):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         denoiser = DataDenoiser()
 
@@ -52,13 +52,13 @@ class DataDenoiseUI:
 
     def run_application(self, prog_menu):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         prog_menu.run()
 
 class Menu:
     '''
-    <insert necessary documentation here>
+    <insert helpful documentation here>
     '''
     def __init__(self, prompt, options, exit_msg):
         self.prompt = prompt
@@ -67,7 +67,7 @@ class Menu:
 
     def display(self):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         print("\n\n"+self.prompt)
         for key, value in self.options.items():
@@ -75,7 +75,7 @@ class Menu:
 
     def get_user_choice(self):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         run_loop = True
         while run_loop:
@@ -95,14 +95,14 @@ class Menu:
 
     def run_user_choice(self, choice):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         args = self.options[choice].get("args", ())
         self.options[choice]['action'](*args)
 
     def run(self):
         '''
-        <insert necessary documentation here>
+        <insert helpful documentation here>
         '''
         run_loop = True
         while run_loop:
