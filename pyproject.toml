@@ -1,3 +1,21 @@
 [build-system]
-requires = ["setuptools>=42.0", "wheel"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "DataDenoise"
+version = "0.1.0"
+dependencies = [
+    "numpy >= 1.20.0",
+    "scipy >= 1.10.0",
+    "pandas >= 2.0.0",
+    "matplotlib >= 3.0.0"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest"
+]
+
+[project.scripts]
+datadenoise = "data_denoise_main:main"

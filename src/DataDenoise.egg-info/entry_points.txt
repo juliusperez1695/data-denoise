@@ -1,0 +1,2 @@
+[console_scripts]
+datadenoise = data_denoise_main:main
