@@ -10,7 +10,7 @@ def test_parabola_outliers():
     '''
     <insert necessary documentation here>
     '''
-    datapath = r"Data_Files/Dataset1.csv"
+    datapath = r"Data_Files/parabola1.csv"
     assert os.path.exists(datapath), f"FAILED to locate file path {datapath}."
 
     test_df = pd.read_csv(datapath, header=None, float_precision='round_trip')
@@ -21,7 +21,7 @@ def test_parabola_outliers():
 
     assert len(outlier_idxs) == 2, f"FAILED Parabola Outliers Test 1.  Number of outliers: {num_outliers}, Expected: {2}"
 
-    datapath = r"Data_Files/Dataset2.csv"
+    datapath = r"Data_Files/parabola2.csv"
     assert os.path.exists(datapath), f"FAILED to locate file path {datapath}."
 
     test_df = pd.read_csv(datapath, header=None, float_precision='round_trip')
