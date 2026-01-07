@@ -78,7 +78,9 @@ class DataProcessor:
         fit_type = self._get_fit_type(fit_mode)
         orig_df_x = self.orig_df.iloc[:,0]
         orig_df_y = self.orig_df.iloc[:,1]
-        self.init_fit_results, self.init_fit_params = self.get_fit_values(fit_type, orig_df_x, orig_df_y)
+        self.init_fit_results, self.init_fit_params = self.get_fit_values(fit_type,
+                                                                          orig_df_x,
+                                                                          orig_df_y)
         dist2fit = abs(100*(self.init_fit_results - orig_df_y))
         rss = self._calculate_rss(self.init_fit_results, np.array(orig_df_y))
 
