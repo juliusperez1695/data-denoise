@@ -1,8 +1,8 @@
 '''
 <insert helpful documentation here>
 '''
-import pandas as pd
 import math
+import pandas as pd
 
 class SolutionChecker:
     '''
@@ -163,10 +163,8 @@ class SolutionChecker:
                               index = ["Initial Fit", "Denoise Fit"])
 
         # Report Intercept
-        init_intercept = init_a*math.exp(init_b*-1*init_c) + init_d
-        deno_intercept = deno_a*math.exp(deno_b*-1*deno_c) + deno_d
-        report.at["Initial Fit", "Intercept"] = init_intercept
-        report.at["Denoise Fit", "Intercept"] = deno_intercept
+        report.at["Initial Fit", "Intercept"] = init_a*math.exp(init_b*-1*init_c) + init_d
+        report.at["Denoise Fit", "Intercept"] = deno_a*math.exp(deno_b*-1*deno_c) + deno_d
 
         # Report Time Constant
         if init_b < 0:

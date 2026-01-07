@@ -69,30 +69,18 @@ class DataProcessor:
 
         plt.show()
 
-    def calculate_rss(
-        self, fit_values : npt.NDArray[np.float64],
-        data_values : npt.NDArray[np.float64]
-    ):
-        '''
-        <insert helpful documentation here>
-        '''
-        residuals = fit_values - data_values
-        rss = np.sqrt(np.sum(residuals**2))
-
-        return rss
-
     def identify_outliers(self, fit_mode : int = 1):
         '''
         - Fits the original data using the preferred fitting method specified by fit_mode
         - Identifies outliers based on Residual Sum of Squares (RSS) of original data
             and compares to each data point's distance from the corresponding fit value
         '''
-        fit_type = self.get_fit_type(fit_mode)
+        fit_type = self._get_fit_type(fit_mode)
         orig_df_x = self.orig_df.iloc[:,0]
         orig_df_y = self.orig_df.iloc[:,1]
         self.init_fit_results, self.init_fit_params = self.get_fit_values(fit_type, orig_df_x, orig_df_y)
         dist2fit = abs(100*(self.init_fit_results - orig_df_y))
-        rss = self.calculate_rss(self.init_fit_results, np.array(orig_df_y))
+        rss = self._calculate_rss(self.init_fit_results, np.array(orig_df_y))
 
         curr_idx = 0
         for d in dist2fit:
@@ -107,15 +95,15 @@ class DataProcessor:
         - Identifies outliers based on Residual Sum of Squares (RSS) of original data
             and compares to each data point's distance from the corresponding fit value
         '''
-        fit_type = self.get_fit_type(fit_mode)
-        fit_tolerance = self.get_fit_tolerance(fit_mode)
+        fit_type = self._get_fit_type(fit_mode)
+        fit_tolerance = self._get_fit_tolerance(fit_mode)
         df_x = self.new_df.iloc[:,0]
         df_y = self.new_df.iloc[:,1]
         self.denoise_fit_results, self.denoise_fit_params = self.get_fit_values(fit_type,
                                                                                 df_x,
                                                                                 df_y)
         dist2fit = abs(100*(self.denoise_fit_results - df_y))
-        rss = self.calculate_rss(self.denoise_fit_results, np.array(df_y))
+        rss = self._calculate_rss(self.denoise_fit_results, np.array(df_y))
 
         curr_idx = 0
         self.idx_list = []
@@ -134,165 +122,34 @@ class DataProcessor:
         self.new_df = self.new_df.reset_index(drop=True)
         return self.new_df
 
-    def parabola_fit(self, x, a, b, c):
-        '''
-        Docstring for parabola_fit
-
-        :param x: Independent variable
-        :param a: Constant coefficient
-        :param b: Linear coefficient
-        :param c: Square coefficient
-        '''
-        return a + b*x + c*x**2
-
-    def guess_parabola_params(self, x_data, y_data) -> np.ndarray:
-        '''
-        Docstring for guess_parabola_params
-
-        :param x_data: Description
-        :param y_data: Description
-        :return: Description
-        :rtype: ndarray[_AnyShape, dtype[Any]]
-        '''
-        a = 1
-        b = 1
-        c = 1
-
-        return np.array([a, b, c])
-
-    def sigmoid_fit(self, x, a, b, c, d):
-        '''
-        Docstring for sigmoid_fit
-
-        :param x: independent variable
-        :param a: Vertical scale-factor
-        :param b: Horizontal scale-factor
-        :param c: Delay constant
-        :param d: Offset
-        '''
-        np.seterr(over='ignore')
-        return a / (1 + np.exp(-b*(x - c))) + d
-
-    def guess_sigmoid_params(self, x_data, y_data) -> np.ndarray:
-        '''
-        Docstring for guess_sigmoid_params
-
-        :param x_data: Description
-        :param y_data: Description
-        :return: Description
-        :rtype: ndarray[_AnyShape, dtype[Any]]
-        '''
-        a = np.max(y_data)
-        b = 1.0
-        c = x_data[len(y_data) // 2]
-        d = np.min(y_data)
-
-        return np.array([a, b, c, d])
-
-    def linear_fit(self, x, a, b):
-        '''
-        Docstring for linear_fit
-
-        :param x: independent variable
-        :param a: Slope
-        :param b: y-intercept
-        '''
-        return a*x + b
-
-    def exponential_fit(self, x, a, b, c, d):
-        '''
-        Docstring for exponential_fit
-
-        :param x: Independent variable
-        :param a: Vertical scale-factor
-        :param b: Horizontal scale-factor
-        :param c: Delay constant
-        :param d: Offset
-        '''
-        return a*np.exp(b*(x - c)) + d
-
-    def guess_exp_params(self, x_data, y_data) -> np.ndarray:
-        '''
-        Docstring for guess_exp_params
-
-        :param x_data: Description
-        :param y_data: Description
-        :return: Description
-        :rtype: ndarray[_AnyShape, dtype[Any]]
-        '''
-
     def get_fit_values(self, fit_type, x_values, y_values):
         '''
         <insert helpful documentation here>
         '''
 
-        if fit_type == self.parabola_fit:
-            initial_guesses = self.guess_parabola_params(x_values, y_values)
+        if fit_type == self._parabola_fit:
+            initial_guesses = self._guess_parabola_params(x_values, y_values)
             popt, _ = curve_fit(fit_type, x_values, y_values, p0=initial_guesses)
-            fit_values = self.parabola_fit(x_values, *popt)
-        elif fit_type == self.sigmoid_fit:
-            initial_guesses = self.guess_sigmoid_params(x_values, y_values)
+            fit_values = self._parabola_fit(x_values, *popt)
+        elif fit_type == self._sigmoid_fit:
+            initial_guesses = self._guess_sigmoid_params(x_values, y_values)
             popt, _ = curve_fit(fit_type, x_values, y_values, p0=initial_guesses)
-            fit_values = self.sigmoid_fit(x_values, *popt)
-        elif fit_type == self.linear_fit:
+            fit_values = self._sigmoid_fit(x_values, *popt)
+        elif fit_type == self._linear_fit:
             initial_guesses = [1, 0]
             popt, _ = curve_fit(fit_type, x_values, y_values, p0=initial_guesses)
-            fit_values = self.linear_fit(x_values, *popt)
-        elif fit_type == self.exponential_fit:
+            fit_values = self._linear_fit(x_values, *popt)
+        elif fit_type == self._exponential_fit:
             initial_guesses = []
             popt, _ = curve_fit(fit_type, x_values, y_values, p0=initial_guesses)
-            fit_values = self.exponential_fit(x_values, *popt)
+            fit_values = self._exponential_fit(x_values, *popt)
         else:
             initial_guesses = []
             popt, _ = curve_fit(fit_type, x_values, y_values, p0=initial_guesses)
-            fit_values = self.parabola_fit(x_values, *popt)
+            fit_values = self._parabola_fit(x_values, *popt)
 
         model_params = popt
         return fit_values, model_params
-
-    def get_fit_type(self, fit_mode : int):
-        '''
-        <insert helpful documentation here>
-        '''
-        if fit_mode == 1:
-            fit_type = self.parabola_fit
-        elif fit_mode == 2:
-            fit_type = self.sigmoid_fit
-        elif fit_mode == 3:
-            fit_type = self.linear_fit
-        elif fit_mode == 4:
-            fit_type = self.exponential_fit
-        else:
-            fit_type = self.parabola_fit
-
-        return fit_type
-
-    def get_fit_tolerance(self, fit_mode) -> int:
-        '''
-        Docstring for get_fit_tolerance
-
-        :param fit_mode: Description
-        :return: Description
-        :rtype: int
-        '''
-        if fit_mode == 1:
-            fit_tolerance = 50
-        elif fit_mode == 2:
-            fit_tolerance = 20
-        elif fit_mode == 3:
-            fit_tolerance = 20
-        elif fit_mode == 4:
-            fit_tolerance = 20
-        else:
-            fit_tolerance = 20
-
-        return fit_tolerance
-
-    def reset_idx_list(self):
-        '''
-        <insert helpful documentation here>
-        '''
-        self.idx_list = []
 
     def update_data(self, df):
         '''
@@ -300,18 +157,19 @@ class DataProcessor:
         '''
         self.new_df = df
 
-    def remove_data(self, x_value):
+    def set_orig_data(self, input_df):
         '''
         <insert helpful documentation here>
         '''
-        self.new_df = self.new_df.drop(x_value, axis='index')
-        self.new_df.reset_index(drop=True)
+        self.orig_df = input_df
 
-    def print_data(self):
+    def set_denoise_fit_results(self, fit_values):
         '''
-        <insert helpful documentation here>
+        Docstring for set_denoise_fit_results
+
+        :param fit_values: Description
         '''
-        print(self.new_df)
+        self.denoise_fit_results = fit_values
 
     def get_denoise_data(self):
         '''
@@ -331,16 +189,147 @@ class DataProcessor:
         '''
         return self.init_fit_results, self.init_fit_params
 
-    def set_orig_data(self, input_df):
+    def get_denoise_fit_results(self):
+        '''
+        Docstring for get_denoise_fit_results
+
+        :param self: Description
+        '''
+        return self.denoise_fit_results, self.denoise_fit_params
+
+    def _calculate_rss(
+        self, fit_values : npt.NDArray[np.float64],
+        data_values : npt.NDArray[np.float64]
+    ):
         '''
         <insert helpful documentation here>
         '''
-        self.orig_df = input_df
+        residuals = fit_values - data_values
+        rss = np.sqrt(np.sum(residuals**2))
 
-    def set_denoise_fit_results(self, fit_values):
-        '''
-        Docstring for set_denoise_fit_results
+        return rss
 
-        :param fit_values: Description
+    def _parabola_fit(self, x, a, b, c):
         '''
-        self.denoise_fit_results = fit_values
+        Docstring for _parabola_fit
+
+        :param x: Independent variable
+        :param a: Constant coefficient
+        :param b: Linear coefficient
+        :param c: Square coefficient
+        '''
+        return a + b*x + c*x**2
+
+    def _guess_parabola_params(self, x_data, y_data) -> np.ndarray:
+        '''
+        Docstring for _guess_parabola_params
+
+        :param x_data: Description
+        :param y_data: Description
+        :return: Description
+        :rtype: ndarray[_AnyShape, dtype[Any]]
+        '''
+        a = 1
+        b = 1
+        c = 1
+
+        return np.array([a, b, c])
+
+    def _sigmoid_fit(self, x, a, b, c, d):
+        '''
+        Docstring for _sigmoid_fit
+
+        :param x: independent variable
+        :param a: Vertical scale-factor
+        :param b: Horizontal scale-factor
+        :param c: Delay constant
+        :param d: Offset
+        '''
+        np.seterr(over='ignore')
+        return a / (1 + np.exp(-b*(x - c))) + d
+
+    def _guess_sigmoid_params(self, x_data, y_data) -> np.ndarray:
+        '''
+        Docstring for _guess_sigmoid_params
+
+        :param x_data: Description
+        :param y_data: Description
+        :return: Description
+        :rtype: ndarray[_AnyShape, dtype[Any]]
+        '''
+        a = np.max(y_data)
+        b = 1.0
+        c = x_data[len(y_data) // 2]
+        d = np.min(y_data)
+
+        return np.array([a, b, c, d])
+
+    def _linear_fit(self, x, a, b):
+        '''
+        Docstring for _linear_fit
+
+        :param x: independent variable
+        :param a: Slope
+        :param b: y-intercept
+        '''
+        return a*x + b
+
+    def _exponential_fit(self, x, a, b, c, d):
+        '''
+        Docstring for _exponential_fit
+
+        :param x: Independent variable
+        :param a: Vertical scale-factor
+        :param b: Horizontal scale-factor
+        :param c: Delay constant
+        :param d: Offset
+        '''
+        return a*np.exp(b*(x - c)) + d
+
+    def _guess_exp_params(self, x_data, y_data) -> np.ndarray:
+        '''
+        Docstring for _guess_exp_params
+
+        :param x_data: Description
+        :param y_data: Description
+        :return: Description
+        :rtype: ndarray[_AnyShape, dtype[Any]]
+        '''
+
+    def _get_fit_type(self, fit_mode : int):
+        '''
+        <insert helpful documentation here>
+        '''
+        if fit_mode == 1:
+            fit_type = self._parabola_fit
+        elif fit_mode == 2:
+            fit_type = self._sigmoid_fit
+        elif fit_mode == 3:
+            fit_type = self._linear_fit
+        elif fit_mode == 4:
+            fit_type = self._exponential_fit
+        else:
+            fit_type = self._parabola_fit
+
+        return fit_type
+
+    def _get_fit_tolerance(self, fit_mode) -> int:
+        '''
+        Docstring for _get_fit_tolerance
+
+        :param fit_mode: Description
+        :return: Description
+        :rtype: int
+        '''
+        if fit_mode == 1:
+            fit_tolerance = 50
+        elif fit_mode == 2:
+            fit_tolerance = 20
+        elif fit_mode == 3:
+            fit_tolerance = 20
+        elif fit_mode == 4:
+            fit_tolerance = 20
+        else:
+            fit_tolerance = 20
+
+        return fit_tolerance

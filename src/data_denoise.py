@@ -42,7 +42,8 @@ class DataDenoiser:
 
         # Then, refit the data iteratively until all outliers have been removed
         found_all_outliers = False
-        while found_all_outliers == False:
+        while found_all_outliers is False:
+
             outlier_index_list = self.dataprocessor.identify_outliers_iterative(fit_mode)
 
             if len(outlier_index_list) == 0:
@@ -64,17 +65,9 @@ class DataDenoiser:
         - original data
         - expected solution
         '''
-        #Fit cleaned data, Fit original data, and compare key values (max/min values and locations)
+        # Obtain the fit parameters for before and after outlier removal
         _, init_fit_params = self.dataprocessor.get_init_fit_results()
-
-        df_denoise = self.dataprocessor.get_denoise_data()
-        df_denoise_x = df_denoise.iloc[:,0]
-        df_denoise_y = df_denoise.iloc[:,1]
-        fit_type = self.dataprocessor.get_fit_type(self.fit_mode)
-        y_df_denoise_fit, denoise_fit_params = self.dataprocessor.get_fit_values(fit_type,
-                                                                                 df_denoise_x,
-                                                                                 df_denoise_y)
-        self.dataprocessor.set_denoise_fit_results(y_df_denoise_fit)
+        _, denoise_fit_params = self.dataprocessor.get_denoise_fit_results()
 
         #Creates SolutionChecker object for comparing key points derived from parameter values
         solution_check = SolutionChecker(init_fit_params, denoise_fit_params, self.fit_mode)
