@@ -297,6 +297,12 @@ class DataProcessor:
         :return: Description
         :rtype: ndarray[_AnyShape, dtype[Any]]
         '''
+        # Determine the shape of the exponential by analyzing the slopes at each end
+        # - This will give some insight on the a and b constants
+
+        # check for y-intercept; if there are no sign changes in x_data, set a default
+
+        # If all x_data is neg/pos, let's assume c is some default neg/pos value
 
     def _get_fit_type(self, fit_mode : int):
         '''
