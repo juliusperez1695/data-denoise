@@ -5,7 +5,7 @@
 import os
 import pandas as pd
 from data_processor import DataProcessor
-from data_denoise import Denoiser
+from data_denoise import DataDenoiser
 
 def test_parabola_outliers():
     '''
@@ -18,7 +18,7 @@ def test_parabola_outliers():
     dataprocessor1 = DataProcessor()
     dataprocessor1.set_orig_data(test_df)
 
-    denoiser1 = Denoiser()
+    denoiser1 = DataDenoiser()
     # outlier_idxs = dataprocessor.identify_outliers_iterative(fit_mode = 1)
     num_outliers = denoiser1.run_outlier_removal(fit_mode = 1)# len(outlier_idxs)
 
@@ -31,7 +31,7 @@ def test_parabola_outliers():
     dataprocessor2 = DataProcessor()
     dataprocessor2.set_orig_data(test_df)
 
-    denoiser2 = Denoiser()
+    denoiser2 = DataDenoiser()
     # outlier_idxs = dataprocessor.identify_outliers_iterative(fit_mode = 1)
     num_outliers = denoiser2.run_outlier_removal(fit_mode = 1) # len(outlier_idxs)
 
