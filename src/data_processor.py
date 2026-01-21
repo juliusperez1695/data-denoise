@@ -76,6 +76,7 @@ class DataProcessor:
             and compares to each data point's distance from the corresponding fit value
         '''
         fit_type = self._get_fit_type(fit_mode)
+        fit_tolerance = self._get_fit_tolerance(fit_mode)
         orig_df_x = self.orig_df.iloc[:,0]
         orig_df_y = self.orig_df.iloc[:,1]
         self.init_fit_results, self.init_fit_params = self.get_fit_values(fit_type,
@@ -86,7 +87,7 @@ class DataProcessor:
 
         curr_idx = 0
         for d in dist2fit:
-            if d/rss > 20:
+            if d/rss > fit_tolerance:
                 self.idx_list.append(curr_idx)
             curr_idx += 1
         return self.idx_list
