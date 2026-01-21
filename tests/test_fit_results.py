@@ -21,8 +21,7 @@ def test_parabola_fit():
     # Generate fit values
     dataprocessor = DataProcessor()
     dataprocessor.set_orig_data(df_test)
-    _ = dataprocessor.identify_outliers_iterative(fit_mode = 1)
-
-    _, fit_params = dataprocessor.get_denoise_fit_results()
+    fit_type = dataprocessor._get_fit_type(fit_mode = 1)
+    _, fit_params = dataprocessor.get_fit_values(fit_type, x_vals, y_vals)
 
     assert test_coeffs == fit_params, f"FAILED Parabola Fit. Coefficients (Fit) = {test_coeffs}, Coefficients (Expected) = {fit_params}."

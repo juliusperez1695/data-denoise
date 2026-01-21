@@ -152,7 +152,7 @@ class DataProcessor:
             fit_values = self._parabola_fit(x_values, *popt)
 
         model_params = popt
-        return fit_values, model_params
+        return np.array(fit_values), np.array(model_params)
 
     def update_data(self, df):
         '''
@@ -223,7 +223,7 @@ class DataProcessor:
         '''
         return a + b*x + c*x**2
 
-    def _guess_parabola_params(self, x_data, y_data) -> np.ndarray:
+    def _guess_parabola_params(self) -> np.ndarray:
         '''
         Docstring for _guess_parabola_params
 
