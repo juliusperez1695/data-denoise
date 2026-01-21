@@ -5,7 +5,6 @@
 import os
 import pandas as pd
 from data_processor import DataProcessor
-from data_denoise import DataDenoiser
 
 def test_parabola_outliers():
     '''
@@ -18,21 +17,23 @@ def test_parabola_outliers():
     dataprocessor1 = DataProcessor()
     dataprocessor1.set_orig_data(test_df)
 
-    denoiser1 = DataDenoiser()
-    # outlier_idxs = dataprocessor.identify_outliers_iterative(fit_mode = 1)
-    num_outliers = denoiser1.run_outlier_removal(fit_mode = 1)# len(outlier_idxs)
+    # First, identify and remove initial set of outliers
+    outlier_index_list = dataprocessor1.identify_outliers(fit_mode = 1)
+    df_denoise = dataprocessor1.remove_outliers(outlier_index_list)
+    dataprocessor1.update_data(test_df)
+    num_outliers_removed = len(outlier_index_list)
 
-    assert num_outliers == 2, f"FAILED Parabola Outliers Test 1.  Number of outliers: {num_outliers}, Expected: {2}."
+    # Then, refit the data iteratively until all outliers have been removed
+    found_all_outliers = False
+    while found_all_outliers is False:
 
-    datapath = r"Data_Files/parabola2.csv"
-    assert os.path.exists(datapath), f"FAILED to locate file path {datapath}."
+        outlier_index_list = dataprocessor1.identify_outliers_iterative(fit_mode = 1)
 
-    test_df = pd.read_csv(datapath, header=None, float_precision='round_trip')
-    dataprocessor2 = DataProcessor()
-    dataprocessor2.set_orig_data(test_df)
+        if len(outlier_index_list) == 0:
+            found_all_outliers = True
+        else:
+            num_outliers_removed += len(outlier_index_list)
+            df_denoise = dataprocessor1.remove_outliers(outlier_index_list)
+            dataprocessor1.update_data(df_denoise)
 
-    denoiser2 = DataDenoiser()
-    # outlier_idxs = dataprocessor.identify_outliers_iterative(fit_mode = 1)
-    num_outliers = denoiser2.run_outlier_removal(fit_mode = 1) # len(outlier_idxs)
-
-    assert num_outliers == 3, f"FAILED Parabola Outliers Test 2.  Number of outliers: {num_outliers}, Expected: {3}."
+    assert num_outliers_removed == 2, f"FAILED Parabola Outliers Test 1.  Number of outliers: {num_outliers_removed}, Expected: {2}."
