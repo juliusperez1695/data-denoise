@@ -59,6 +59,8 @@ class DataDenoiser:
         self.fit_mode = fit_mode
         sleep(4)
 
+        return num_outliers_removed
+
     def run_solution_check(self):
         '''
         Compares and validates the processed solution against:
