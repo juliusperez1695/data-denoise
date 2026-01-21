@@ -131,7 +131,7 @@ class DataProcessor:
         '''
 
         if fit_type == self._parabola_fit:
-            initial_guesses = self._guess_parabola_params(x_values, y_values)
+            initial_guesses = self._guess_parabola_params()
             popt, _ = curve_fit(fit_type, x_values, y_values, p0=initial_guesses)
             fit_values = self._parabola_fit(x_values, *popt)
         elif fit_type == self._sigmoid_fit:

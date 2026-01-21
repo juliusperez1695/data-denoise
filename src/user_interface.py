@@ -1,8 +1,6 @@
 '''
 <insert helpful documentation here>
 '''
-
-import os
 from time import sleep
 from data_denoise import DataDenoiser
 

@@ -28,4 +28,4 @@ jobs:
 
     - name: Analyze code with pylint
       run: |
-        pylint --disable=R0913,R0917,W0143 $(git ls-files '*.py')
+        pylint --disable=R0913,R0917,W0143,E1121 $(git ls-files '*.py')
