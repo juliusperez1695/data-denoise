@@ -13,14 +13,13 @@ def test_parabola_outliers():
     datapath = r"Data_Files/parabola1.csv"
     assert os.path.exists(datapath), f"FAILED to locate file path {datapath}."
 
-    test_df = pd.read_csv(datapath, header=None, float_precision='round_trip')
     dataprocessor1 = DataProcessor()
-    dataprocessor1.set_orig_data(test_df)
+    _ = dataprocessor1.import_csv_data(datapath)
 
     # First, identify and remove initial set of outliers
     outlier_index_list = dataprocessor1.identify_outliers(fit_mode = 1)
     df_denoise = dataprocessor1.remove_outliers(outlier_index_list)
-    dataprocessor1.update_data(test_df)
+    dataprocessor1.update_data(df_denoise)
     num_outliers_removed = len(outlier_index_list)
 
     # Then, refit the data iteratively until all outliers have been removed
