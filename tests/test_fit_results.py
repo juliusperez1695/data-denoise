@@ -12,8 +12,8 @@ def test_parabola_fit():
     '''
     # Generate test values
     x_vals = np.arange(0, 20, 0.5)
-    test_coeffs = np.array([5, 10, 10])
-    y_vals = test_coeffs[0]*x_vals**2 + test_coeffs[1]*x_vals + test_coeffs[2]
+    test_coeffs = np.array([10, 10, 5])
+    y_vals = test_coeffs[2]*x_vals**2 + test_coeffs[1]*x_vals + test_coeffs[0]
     df_test = pd.DataFrame()
     df_test[0] = x_vals
     df_test[1] = y_vals
