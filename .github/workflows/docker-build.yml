@@ -24,21 +24,20 @@ jobs:
                 username: ${{ secrets.DOCKER_USERNAME }}
                 password: ${{ secrets.DOCKER_PASSWORD }}
 
-            - name: Set up Docker Buildx
-              uses: docker/setup-buildx-action@v3
-
             - name: Extract metadata (tags, labels) for Docker
               id: meta
               uses: docker/metadata-action@v5
               with:
                 images: ${{ secrets.DOCKER_USERNAME }}/data-denoise
 
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
             - name: Build and push Docker image
               uses: docker/build-push-action@v6
               with:
-                context: .
-                push: true # Set to true to push the image
+                push: true
                 tags: ${{ steps.meta.outputs.tags }}
-                labels: ${{ steps.meta.outputs.labels }}
-                cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache
-                cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache,mode=max
+                annotations: ${{ steps.meta.outputs.annotations }}
+                provenance: true
+                sbom: true
