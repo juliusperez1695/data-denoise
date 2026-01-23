@@ -1,5 +1,7 @@
 ''' The purpose of this module is to perform operations on the uploaded data '''
 
+import os
+import uuid
 from typing import List
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -16,6 +18,10 @@ class DataProcessor:
         self.orig_df = pd.DataFrame()
         self.new_df = pd.DataFrame()
         self.init_fit_results = np.array([])
+        self.init_fit_params = np.array([])
+        self.denoise_fit_results = np.array([])
+        self.denoise_fit_params = np.array([])
+        self.session_id = ""
 
     def import_csv_data(self, data_file_path : str):
         '''
@@ -25,6 +31,11 @@ class DataProcessor:
         self.idx_list = []
         self.orig_df = pd.DataFrame()
         self.new_df = pd.DataFrame()
+        self.init_fit_results = np.array([])
+        self.init_fit_params = np.array([])
+        self.denoise_fit_results = np.array([])
+        self.denoise_fit_params = np.array([])
+        self.session_id = self._generate_unique_id()
         df = pd.read_csv(data_file_path, header=None, float_precision='round_trip')
 
         self.orig_df = df
@@ -32,39 +43,60 @@ class DataProcessor:
 
         return df
 
-    def plot_data(self):
+    def export_csv_report(self, output_df : pd.DataFrame, filename_prefix : str):
+        '''
+        Docstring for export_csv_report
+
+        :param self: Description
+        :param data: Description
+        '''
+        export_dir = './output_csv_reports'
+        csv_id_str = self.session_id
+        csv_name = filename_prefix+'_export_'+csv_id_str+'.csv'
+        full_save_path = os.path.join(export_dir, csv_name)
+        os.makedirs(export_dir, exist_ok=True)
+
+        output_df.to_csv(full_save_path, index=False)
+
+    def plot_data(self, export_plot=False):
         '''
         <insert helpful documentation here>
         '''
-        plt.figure(figsize=(9,5))
+        plt.figure(figsize=(12,5))
 
         plt.subplot(121)
-        plt.plot(self.orig_df.iloc[:,0], self.orig_df.iloc[:,1], 'ro')
+        plt.plot(self.orig_df.iloc[:,0], self.orig_df.iloc[:,1], 'ko')
+        if np.size(self.init_fit_results) != 0:
+            plt.plot(self.orig_df.iloc[:,0], self.init_fit_results, 'r--')
         plt.title('Original Data')
-        plt.xlabel('x values')
-        plt.ylabel('y values')
+        plt.xlabel('x')
+        plt.ylabel('f(x)')
+        if np.size(self.init_fit_results) != 0:
+            plt.legend(["Orig. Data", "Orig. Fit"])
 
         plt.subplot(122)
         plt.plot(self.new_df.iloc[:,0], self.new_df.iloc[:,1], 'bo')
+        if np.size(self.denoise_fit_results) != 0:
+            plt.plot(self.new_df.iloc[:,0], self.denoise_fit_results, '--', color='orange')
         plt.title('Processed Data')
-        plt.xlabel('x values')
-        plt.ylabel('y values')
+        plt.xlabel('x')
+        plt.ylabel('f(x)')
+        if np.size(self.denoise_fit_results) != 0:
+            plt.legend(["Denoised Data", "Denoised Fit"])
 
-        print("**Close plot window to continue**\n\n")
+        if export_plot:
+            export_dir = './output_plots'
+            fig_id_str = self.session_id
+            fig_name = 'plot_export_'+fig_id_str+'.png'
+            full_save_path = os.path.join(export_dir, fig_name)
+            os.makedirs(export_dir, exist_ok=True)
+
+            plt.savefig(full_save_path)
+            print("** Plot figure has been saved to './output_plots' **\n\n")
+
+        print("** If plot is displayed, close plot window to continue **\n\n")
 
         plt.show()
-
-    def calculate_rss(
-        self, fit_values : npt.NDArray[np.float64],
-        data_values : npt.NDArray[np.float64]
-    ):
-        '''
-        <insert helpful documentation here>
-        '''
-        residuals = fit_values - data_values
-        rss = np.sqrt(np.sum(residuals**2))
-
-        return rss
 
     def identify_outliers(self, fit_mode : int = 1):
         '''
@@ -72,16 +104,43 @@ class DataProcessor:
         - Identifies outliers based on Residual Sum of Squares (RSS) of original data
             and compares to each data point's distance from the corresponding fit value
         '''
-        fit_type = self.get_fit_type(fit_mode)
+        fit_type = self._get_fit_type(fit_mode)
+        fit_tolerance = self._get_fit_tolerance(fit_mode)
         orig_df_x = self.orig_df.iloc[:,0]
         orig_df_y = self.orig_df.iloc[:,1]
-        self.init_fit_results = self.get_fit_values(fit_type, orig_df_x, orig_df_y)
+        self.init_fit_results, self.init_fit_params = self.get_fit_values(fit_type,
+                                                                          orig_df_x,
+                                                                          orig_df_y)
         dist2fit = abs(100*(self.init_fit_results - orig_df_y))
-        rss = self.calculate_rss(self.init_fit_results, np.array(orig_df_y))
+        rss = self._calculate_rss(self.init_fit_results, np.array(orig_df_y))
 
         curr_idx = 0
         for d in dist2fit:
-            if d/rss > 20:
+            if d/rss > fit_tolerance:
+                self.idx_list.append(curr_idx)
+            curr_idx += 1
+        return self.idx_list
+
+    def identify_outliers_iterative(self, fit_mode : int = 1):
+        '''
+        - Fits the NEW data using the preferred fitting method specified by fit_mode
+        - Identifies outliers based on Residual Sum of Squares (RSS) of original data
+            and compares to each data point's distance from the corresponding fit value
+        '''
+        fit_type = self._get_fit_type(fit_mode)
+        fit_tolerance = self._get_fit_tolerance(fit_mode)
+        df_x = self.new_df.iloc[:,0]
+        df_y = self.new_df.iloc[:,1]
+        self.denoise_fit_results, self.denoise_fit_params = self.get_fit_values(fit_type,
+                                                                                df_x,
+                                                                                df_y)
+        dist2fit = abs(100*(self.denoise_fit_results - df_y))
+        rss = self._calculate_rss(self.denoise_fit_results, np.array(df_y))
+
+        curr_idx = 0
+        self.idx_list = []
+        for d in dist2fit:
+            if d/rss > fit_tolerance:
                 self.idx_list.append(curr_idx)
             curr_idx += 1
         return self.idx_list
@@ -92,37 +151,40 @@ class DataProcessor:
         '''
         for loc in outlier_loc:
             self.new_df = self.new_df.drop(loc)
+        self.new_df = self.new_df.reset_index(drop=True)
         return self.new_df
-
-    def parabola_fit(self, x, a, b, c):
-        '''
-        <insert helpful documentation here>
-        '''
-        return a + b*x + c*x**2
 
     def get_fit_values(self, fit_type, x_values, y_values):
         '''
         <insert helpful documentation here>
         '''
-        popt, _ = curve_fit(fit_type, x_values, y_values)
-        return self.parabola_fit(x_values, *popt)
 
-    def get_fit_type(self, fit_mode : int):
-        '''
-        <insert helpful documentation here>
-        '''
-        if fit_mode == 1:
-            fit_type = self.parabola_fit
+        if fit_type == self._parabola_fit:
+            initial_guesses = self._guess_parabola_params()
+            popt, _ = curve_fit(fit_type, x_values, y_values, p0=initial_guesses)
+            fit_values = self._parabola_fit(x_values, *popt)
+        elif fit_type == self._sigmoid_fit:
+            initial_guesses = self._guess_sigmoid_params(x_values, y_values)
+            lower_bounds = ((0.0, 0.0, -np.inf, -np.inf))
+            upper_bounds = ((np.inf, np.inf, np.inf, np.inf))
+            sig_bounds = (lower_bounds, upper_bounds)
+            popt, _ = curve_fit(fit_type, x_values, y_values, p0=initial_guesses, bounds=sig_bounds)
+            fit_values = self._sigmoid_fit(x_values, *popt)
+        elif fit_type == self._linear_fit:
+            initial_guesses = [1, 0]
+            popt, _ = curve_fit(fit_type, x_values, y_values, p0=initial_guesses)
+            fit_values = self._linear_fit(x_values, *popt)
+        elif fit_type == self._exponential_fit:
+            initial_guesses = []
+            popt, _ = curve_fit(fit_type, x_values, y_values, p0=initial_guesses)
+            fit_values = self._exponential_fit(x_values, *popt)
         else:
-            fit_type = self.parabola_fit
+            initial_guesses = []
+            popt, _ = curve_fit(fit_type, x_values, y_values, p0=initial_guesses)
+            fit_values = self._parabola_fit(x_values, *popt)
 
-        return fit_type
-
-    def reset_idx_list(self):
-        '''
-        <insert helpful documentation here>
-        '''
-        self.idx_list = []
+        model_params = popt
+        return np.array(fit_values), np.array(model_params)
 
     def update_data(self, df):
         '''
@@ -130,17 +192,19 @@ class DataProcessor:
         '''
         self.new_df = df
 
-    def remove_data(self, x_value):
+    def set_orig_data(self, input_df):
         '''
         <insert helpful documentation here>
         '''
-        self.new_df = self.new_df.drop(x_value, axis='index')
+        self.orig_df = input_df
 
-    def print_data(self):
+    def set_denoise_fit_results(self, fit_values):
         '''
-        <insert helpful documentation here>
+        Docstring for set_denoise_fit_results
+
+        :param fit_values: Description
         '''
-        print(self.new_df)
+        self.denoise_fit_results = fit_values
 
     def get_denoise_data(self):
         '''
@@ -158,10 +222,162 @@ class DataProcessor:
         '''
         <insert helpful documentation here>
         '''
-        return self.init_fit_results
+        return self.init_fit_results, self.init_fit_params
 
-    def set_orig_data(self, input_df):
+    def get_denoise_fit_results(self):
+        '''
+        Docstring for get_denoise_fit_results
+
+        :param self: Description
+        '''
+        return self.denoise_fit_results, self.denoise_fit_params
+
+    def _calculate_rss(
+        self, fit_values : npt.NDArray[np.float64],
+        data_values : npt.NDArray[np.float64]
+    ):
         '''
         <insert helpful documentation here>
         '''
-        self.orig_df = input_df
+        residuals = fit_values - data_values
+        rss = np.sqrt(np.sum(residuals**2))
+
+        return rss
+
+    def _parabola_fit(self, x, a, b, c):
+        '''
+        Docstring for _parabola_fit
+
+        :param x: Independent variable
+        :param a: Constant coefficient
+        :param b: Linear coefficient
+        :param c: Square coefficient
+        '''
+        return a + b*x + c*x**2
+
+    def _guess_parabola_params(self) -> np.ndarray:
+        '''
+        Docstring for _guess_parabola_params
+
+        :param x_data: Description
+        :param y_data: Description
+        :return: Description
+        :rtype: ndarray[_AnyShape, dtype[Any]]
+        '''
+        a = 1
+        b = 1
+        c = 1
+
+        return np.array([a, b, c])
+
+    def _sigmoid_fit(self, x, a, b, c, d):
+        '''
+        Docstring for _sigmoid_fit
+
+        :param x: independent variable
+        :param a: Vertical scale-factor
+        :param b: Horizontal scale-factor
+        :param c: Delay constant
+        :param d: Offset
+        '''
+        np.seterr(over='ignore')
+        return a / (1 + np.exp(-b*(x - c))) + d
+
+    def _guess_sigmoid_params(self, x_data, y_data) -> np.ndarray:
+        '''
+        Docstring for _guess_sigmoid_params
+
+        :param x_data: Description
+        :param y_data: Description
+        :return: Description
+        :rtype: ndarray[_AnyShape, dtype[Any]]
+        '''
+        a = np.max(y_data)
+        b = 100
+        c = x_data[len(y_data) // 2]
+        d = 0.0
+
+        return np.array([a, b, c, d])
+
+    def _linear_fit(self, x, a, b):
+        '''
+        Docstring for _linear_fit
+
+        :param x: independent variable
+        :param a: Slope
+        :param b: y-intercept
+        '''
+        return a*x + b
+
+    def _exponential_fit(self, x, a, b, c, d):
+        '''
+        Docstring for _exponential_fit
+
+        :param x: Independent variable
+        :param a: Vertical scale-factor
+        :param b: Horizontal scale-factor
+        :param c: Delay constant
+        :param d: Offset
+        '''
+        return a*np.exp(b*(x - c)) + d
+
+    def _guess_exp_params(self, x_data, y_data) -> np.ndarray:
+        '''
+        Docstring for _guess_exp_params
+
+        :param x_data: Description
+        :param y_data: Description
+        :return: Description
+        :rtype: ndarray[_AnyShape, dtype[Any]]
+        '''
+        # Determine the shape of the exponential by analyzing the slopes at each end
+        # - This will give some insight on the a and b constants
+
+        # check for y-intercept; if there are no sign changes in x_data, set a default
+
+        # If all x_data is neg/pos, let's assume c is some default neg/pos value
+
+    def _get_fit_type(self, fit_mode : int):
+        '''
+        <insert helpful documentation here>
+        '''
+        if fit_mode == 1:
+            fit_type = self._parabola_fit
+        elif fit_mode == 2:
+            fit_type = self._sigmoid_fit
+        elif fit_mode == 3:
+            fit_type = self._linear_fit
+        elif fit_mode == 4:
+            fit_type = self._exponential_fit
+        else:
+            fit_type = self._parabola_fit
+
+        return fit_type
+
+    def _get_fit_tolerance(self, fit_mode) -> int:
+        '''
+        Docstring for _get_fit_tolerance
+
+        :param fit_mode: Description
+        :return: Description
+        :rtype: int
+        '''
+        if fit_mode == 1:
+            fit_tolerance = 50
+        elif fit_mode == 2:
+            fit_tolerance = 20
+        elif fit_mode == 3:
+            fit_tolerance = 20
+        elif fit_mode == 4:
+            fit_tolerance = 20
+        else:
+            fit_tolerance = 20
+
+        return fit_tolerance
+
+    def _generate_unique_id(self):
+        '''Generates a random, universally unique ID as a string.'''
+        # uuid4() generates a random UUID
+        unique_id = uuid.uuid4()
+        # Convert the UUID object to a string for common use (e.g., database keys)
+        return str(unique_id)

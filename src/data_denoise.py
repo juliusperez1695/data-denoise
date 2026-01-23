@@ -34,15 +34,32 @@ class DataDenoiser:
 
     def run_outlier_removal(self, fit_mode : int = 1):
         ''' Removes outliers based on fit-type used (specified by fit_mode) '''
+        # First, identify and remove initial set of outliers
         outlier_index_list = self.dataprocessor.identify_outliers(fit_mode)
         df_denoise = self.dataprocessor.remove_outliers(outlier_index_list)
-        print("\nNumber of Outliers Removed: " + str(len(outlier_index_list)) + "\n\n")
+        self.dataprocessor.update_data(df_denoise)
+        num_outliers_removed = len(outlier_index_list)
+
+        # Then, refit the data iteratively until all outliers have been removed
+        found_all_outliers = False
+        while found_all_outliers is False:
+
+            outlier_index_list = self.dataprocessor.identify_outliers_iterative(fit_mode)
+
+            if len(outlier_index_list) == 0:
+                found_all_outliers = True
+            else:
+                num_outliers_removed += len(outlier_index_list)
+                df_denoise = self.dataprocessor.remove_outliers(outlier_index_list)
+                self.dataprocessor.update_data(df_denoise)
+        print("\nNumber of Outliers Removed: " + str(num_outliers_removed) + "\n\n")
         sleep(1.5)
         print("Return to Data Processing Menu to check solution.")
-        self.dataprocessor.update_data(df_denoise)
 
         self.fit_mode = fit_mode
         sleep(4)
+
+        return num_outliers_removed
 
     def run_solution_check(self):
         '''
@@ -50,28 +67,31 @@ class DataDenoiser:
         - original data
         - expected solution
         '''
-        #Fit cleaned data, Fit original data, and compare key values (max/min values and locations)
-        df = self.dataprocessor.get_orig_data()
-        y_df_fit = self.dataprocessor.get_init_fit_results()
+        # Obtain the fit parameters for before and after outlier removal
+        _, init_fit_params = self.dataprocessor.get_init_fit_results()
+        _, denoise_fit_params = self.dataprocessor.get_denoise_fit_results()
 
-        df_denoise = self.dataprocessor.get_denoise_data()
-        df_denoise_x = df_denoise.iloc[:,0]
-        df_denoise_y = df_denoise.iloc[:,1]
-        fit_type = self.dataprocessor.get_fit_type(self.fit_mode)
-        y_df_denoise_fit = self.dataprocessor.get_fit_values(fit_type, df_denoise_x, df_denoise_y)
+        #Creates SolutionChecker object for comparing key points derived from parameter values
+        solution_check = SolutionChecker(init_fit_params, denoise_fit_params, self.fit_mode)
 
-        #Creates SolutionChecker object for performing fitting method and locating extrema
-        solution_check = SolutionChecker(y_df_fit, y_df_denoise_fit)
+        # Report comparison between initial fit and denoised fit
+        results_table = solution_check.run_comparison()
 
-        #Find extrema of original data fit and clean data fit along with indices
-        df_idx, df_extrema = solution_check.find_extrema(y_df_fit)
-        df_denoise_idx, df_denoise_extrema = solution_check.find_extrema(y_df_denoise_fit)
+        #Display and Export Results
+        print("\n")
+        print(results_table)
+        print("\n")
+        print("The table above has been saved here: './output_csv_reports/'")
+        self.dataprocessor.export_csv_report(results_table, "results_comparison")
 
-        #Display Results
-        print("\nOriginal Extrema: " + str(df_extrema))
-        print("Original Extrema Location: " + str(df.iloc[:,0].iloc[df_idx]))
-        print("Denoised Extrema: " + str(df_denoise_extrema))
-        print("Denoised Extrema Location: " + str(df_denoise_x.iloc[df_denoise_idx]) + "\n\n")
-        self.dataprocessor.plot_data()
+        # Plot comparison and generate csv report
+        self.dataprocessor.plot_data(export_plot=True)
+
+        init_df = self.dataprocessor.get_orig_data()
+        final_df = self.dataprocessor.get_denoise_data()
+        data_csv_report = solution_check.build_compare_df(init_df, final_df)
+        self.dataprocessor.export_csv_report(data_csv_report, "plot_data_comparison")
+        print("Solution Data (before and after outlier removal) has been saved here: ")
+        print("     './output_csv_reports/'\n\n")
         print("Returning to Data Processing Menu . . . ")
         sleep(4)

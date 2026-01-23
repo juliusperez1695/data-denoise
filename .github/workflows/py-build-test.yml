@@ -8,7 +8,7 @@ jobs:
         strategy:
             matrix:
               os: [ubuntu-latest, macos-latest, windows-latest]
-              python-version: ['3.10', '3.11', '3.12']
+              python-version: ['3.14']
 
         runs-on: ${{ matrix.os }}
 
@@ -31,7 +31,7 @@ jobs:
                 pip install setuptools
                 pip install wheel
                 pip install build
-            
+
             # Step 4
             - name: Build the Python application
               run: |
@@ -50,20 +50,20 @@ jobs:
         strategy:
             matrix:
               os: [ubuntu-latest, macos-latest, windows-latest]
-              python-version: ['3.10', '3.11', '3.12']
+              python-version: ['3.14']
         runs-on: ${{matrix.os}}
         steps:
             # Step 1
             - name: Check out repository code
               uses: actions/checkout@v4
-            
+
             # Step 2
             - name: Download artifacts
               uses: actions/download-artifact@v4
               with:
                 name: build-${{matrix.os}}-py-${{matrix.python-version}}
                 path: dist
-            
+
             # Step 3
             - name: Install Project and dependencies
               run: |

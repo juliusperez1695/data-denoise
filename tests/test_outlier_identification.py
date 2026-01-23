@@ -6,28 +6,64 @@ import os
 import pandas as pd
 from data_processor import DataProcessor
 
-def test_parabola_outliers():
+def test_parabola_outliers1():
     '''
     <insert necessary documentation here>
     '''
-    datapath = r"Data_Files/Dataset1.csv"
+    datapath = r"Data_Files/parabola1.csv"
     assert os.path.exists(datapath), f"FAILED to locate file path {datapath}."
 
-    test_df = pd.read_csv(datapath, header=None, float_precision='round_trip')
-    dataprocessor = DataProcessor()
-    dataprocessor.set_orig_data(test_df)
-    outlier_idxs = dataprocessor.identify_outliers(fit_mode = 1)
-    num_outliers = len(outlier_idxs)
+    dataprocessor1 = DataProcessor()
+    _ = dataprocessor1.import_csv_data(datapath)
 
-    assert len(outlier_idxs) == 2, f"FAILED Parabola Outliers Test 1.  Number of outliers: {num_outliers}, Expected: {2}"
+    # First, identify and remove initial set of outliers
+    outlier_index_list = dataprocessor1.identify_outliers(fit_mode = 1)
+    df_denoise = dataprocessor1.remove_outliers(outlier_index_list)
+    dataprocessor1.update_data(df_denoise)
+    num_outliers_removed = len(outlier_index_list)
 
-    datapath = r"Data_Files/Dataset2.csv"
+    # Then, refit the data iteratively until all outliers have been removed
+    found_all_outliers = False
+    while found_all_outliers is False:
+
+        outlier_index_list = dataprocessor1.identify_outliers_iterative(fit_mode = 1)
+
+        if len(outlier_index_list) == 0:
+            found_all_outliers = True
+        else:
+            num_outliers_removed += len(outlier_index_list)
+            df_denoise = dataprocessor1.remove_outliers(outlier_index_list)
+            dataprocessor1.update_data(df_denoise)
+
+    assert num_outliers_removed == 2, f"FAILED Parabola Outliers Test 1.  Number of outliers: {num_outliers_removed}, Expected: {2}."
+
+def test_parabola_outliers2():
+    '''
+    <insert necessary documentation here>
+    '''
+    datapath = r"Data_Files/parabola2.csv"
     assert os.path.exists(datapath), f"FAILED to locate file path {datapath}."
 
-    test_df = pd.read_csv(datapath, header=None, float_precision='round_trip')
-    dataprocessor = DataProcessor()
-    dataprocessor.set_orig_data(test_df)
-    outlier_idxs = dataprocessor.identify_outliers(fit_mode = 1)
-    num_outliers = len(outlier_idxs)
+    dataprocessor1 = DataProcessor()
+    _ = dataprocessor1.import_csv_data(datapath)
 
-    assert len(outlier_idxs) == 3, f"FAILED Parabola Outliers Test 2.  Number of outliers: {num_outliers}, Expected: {3}"
+    # First, identify and remove initial set of outliers
+    outlier_index_list = dataprocessor1.identify_outliers(fit_mode = 1)
+    df_denoise = dataprocessor1.remove_outliers(outlier_index_list)
+    dataprocessor1.update_data(df_denoise)
+    num_outliers_removed = len(outlier_index_list)
+
+    # Then, refit the data iteratively until all outliers have been removed
+    found_all_outliers = False
+    while found_all_outliers is False:
+
+        outlier_index_list = dataprocessor1.identify_outliers_iterative(fit_mode = 1)
+
+        if len(outlier_index_list) == 0:
+            found_all_outliers = True
+        else:
+            num_outliers_removed += len(outlier_index_list)
+            df_denoise = dataprocessor1.remove_outliers(outlier_index_list)
+            dataprocessor1.update_data(df_denoise)
+
+    assert num_outliers_removed == 3, f"FAILED Parabola Outliers Test 1.  Number of outliers: {num_outliers_removed}, Expected: {3}."

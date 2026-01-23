@@ -1,8 +1,6 @@
 '''
 <insert helpful documentation here>
 '''
-
-import os
 from time import sleep
 from data_denoise import DataDenoiser
 
@@ -22,6 +20,15 @@ class DataDenoiseUI:
                             '1': {'text':"Parabolic",
                                    'action':denoiser.run_outlier_removal,
                                    'args':(1,)},
+                            '2': {'text':"Sigmoid",
+                                   'action':denoiser.run_outlier_removal,
+                                   'args':(2,)},
+                            '3': {'text':"Linear",
+                                   'action':denoiser.run_outlier_removal,
+                                   'args':(3,)},
+                            '4': {'text':"Exponential",
+                                   'action':denoiser.run_outlier_removal,
+                                   'args':(4,)},
                             'Q': {'text':"Return to Data Processing Menu",
                                   'action':quit}
                          }, exit_msg="")
@@ -106,7 +113,7 @@ class Menu:
         '''
         run_loop = True
         while run_loop:
-            os.system('cls' if os.name == 'nt' else 'clear')
+            # os.system('cls' if os.name == 'nt' else 'clear')
             self.display()
             choice = self.get_user_choice()
             if choice == 'Q':

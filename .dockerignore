@@ -1,0 +1,15 @@
+venv
+__pycache__
+*.pyc
+.git
+.github
+.gitignore
+.gitattributes
+.pytest_cache
+tests/
+dist/
+build/
+*.env
+Data_Files.tar
+pytest.ini
+setup.py

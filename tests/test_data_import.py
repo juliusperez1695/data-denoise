@@ -10,7 +10,7 @@ def test_csv_import():
     <insert helpful documentation here>
     '''
     dataproc = DataProcessor()
-    datapath = r"Data_Files/Dataset1.csv"
+    datapath = r"Data_Files/parabola1.csv"
     assert os.path.exists(datapath), f"FAILED locating CSV file in {datapath}"
 
     df = dataproc.import_csv_data(datapath)
