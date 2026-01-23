@@ -1,5 +1,7 @@
 ''' The purpose of this module is to perform operations on the uploaded data '''
 
+import os
+import uuid
 from typing import List
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -65,7 +67,17 @@ class DataProcessor:
         if np.size(self.denoise_fit_results) != 0:
             plt.legend(["Denoised Data", "Denoised Fit"])
 
-        print("**Close plot window to continue**\n\n")
+        export_dir = './output_plots'
+        fig_id_str = self._generate_unique_id()
+        fig_name = 'plot_export_'+fig_id_str+'.png'
+        full_save_path = os.path.join(export_dir, fig_name)
+        # os.makedirs(export_dir, exist_ok=True)
+
+        # plt.savefig(full_save_path)
+
+        print("** If plot is displayed, close plot window to continue **\n\n")
+
+        print("** Plot figure has been saved to './output_plots' **\n\n")
 
         plt.show()
 
@@ -136,7 +148,10 @@ class DataProcessor:
             fit_values = self._parabola_fit(x_values, *popt)
         elif fit_type == self._sigmoid_fit:
             initial_guesses = self._guess_sigmoid_params(x_values, y_values)
-            popt, _ = curve_fit(fit_type, x_values, y_values, p0=initial_guesses)
+            lower_bounds = ((0.0, 0.0, -np.inf, -np.inf))
+            upper_bounds = ((np.inf, np.inf, np.inf, np.inf))
+            sig_bounds = (lower_bounds, upper_bounds)
+            popt, _ = curve_fit(fit_type, x_values, y_values, p0=initial_guesses, bounds=sig_bounds)
             fit_values = self._sigmoid_fit(x_values, *popt)
         elif fit_type == self._linear_fit:
             initial_guesses = [1, 0]
@@ -261,9 +276,9 @@ class DataProcessor:
         :rtype: ndarray[_AnyShape, dtype[Any]]
         '''
         a = np.max(y_data)
-        b = 1.0
+        b = 100
         c = x_data[len(y_data) // 2]
-        d = np.min(y_data)
+        d = 0.0
 
         return np.array([a, b, c, d])
 
@@ -342,3 +357,10 @@ class DataProcessor:
             fit_tolerance = 20
 
         return fit_tolerance
+
+    def _generate_unique_id(self):
+        '''Generates a random, universally unique ID as a string.'''
+        # uuid4() generates a random UUID
+        unique_id = uuid.uuid4()
+        # Convert the UUID object to a string for common use (e.g., database keys)
+        return str(unique_id)
