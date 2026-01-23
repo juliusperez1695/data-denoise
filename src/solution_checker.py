@@ -195,6 +195,15 @@ class SolutionChecker:
         return report
 
     def build_compare_df(self, initial_df : pd.DataFrame, final_df : pd.DataFrame):
+        '''
+        Docstring for build_compare_df
+
+        :param self: Description
+        :param initial_df: Description
+        :type initial_df: pd.DataFrame
+        :param final_df: Description
+        :type final_df: pd.DataFrame
+        '''
         output_df = pd.DataFrame(columns=["x_init", "y_init", "x_final", "y_final"])
         output_df["x_init"] = initial_df[0]
         output_df["y_init"] = initial_df[1]

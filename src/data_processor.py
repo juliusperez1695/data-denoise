@@ -21,7 +21,7 @@ class DataProcessor:
         self.init_fit_params = np.array([])
         self.denoise_fit_results = np.array([])
         self.denoise_fit_params = np.array([])
-        self.session_id = self._generate_unique_id()
+        self.session_id = ""
 
     def import_csv_data(self, data_file_path : str):
         '''
@@ -35,6 +35,7 @@ class DataProcessor:
         self.init_fit_params = np.array([])
         self.denoise_fit_results = np.array([])
         self.denoise_fit_params = np.array([])
+        self.session_id = self._generate_unique_id()
         df = pd.read_csv(data_file_path, header=None, float_precision='round_trip')
 
         self.orig_df = df
