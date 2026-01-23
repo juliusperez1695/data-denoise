@@ -21,6 +21,7 @@ class DataProcessor:
         self.init_fit_params = np.array([])
         self.denoise_fit_results = np.array([])
         self.denoise_fit_params = np.array([])
+        self.session_id = self._generate_unique_id()
 
     def import_csv_data(self, data_file_path : str):
         '''
@@ -41,7 +42,22 @@ class DataProcessor:
 
         return df
 
-    def plot_data(self):
+    def export_csv_report(self, output_df : pd.DataFrame, filename_prefix : str):
+        '''
+        Docstring for export_csv_report
+
+        :param self: Description
+        :param data: Description
+        '''
+        export_dir = './output_csv_reports'
+        csv_id_str = self.session_id
+        csv_name = filename_prefix+'_export_'+csv_id_str+'.csv'
+        full_save_path = os.path.join(export_dir, csv_name)
+        os.makedirs(export_dir, exist_ok=True)
+
+        output_df.to_csv(full_save_path, index=False)
+
+    def plot_data(self, export_plot=False):
         '''
         <insert helpful documentation here>
         '''
@@ -67,17 +83,17 @@ class DataProcessor:
         if np.size(self.denoise_fit_results) != 0:
             plt.legend(["Denoised Data", "Denoised Fit"])
 
-        export_dir = './output_plots'
-        fig_id_str = self._generate_unique_id()
-        fig_name = 'plot_export_'+fig_id_str+'.png'
-        full_save_path = os.path.join(export_dir, fig_name)
-        # os.makedirs(export_dir, exist_ok=True)
+        if export_plot:
+            export_dir = './output_plots'
+            fig_id_str = self.session_id
+            fig_name = 'plot_export_'+fig_id_str+'.png'
+            full_save_path = os.path.join(export_dir, fig_name)
+            os.makedirs(export_dir, exist_ok=True)
 
-        # plt.savefig(full_save_path)
+            plt.savefig(full_save_path)
+            print("** Plot figure has been saved to './output_plots' **\n\n")
 
         print("** If plot is displayed, close plot window to continue **\n\n")
-
-        print("** Plot figure has been saved to './output_plots' **\n\n")
 
         plt.show()
 

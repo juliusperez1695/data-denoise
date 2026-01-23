@@ -193,3 +193,12 @@ class SolutionChecker:
         report.at["Denoise Fit", "Steady-state"] = deno_ss
 
         return report
+
+    def build_compare_df(self, initial_df : pd.DataFrame, final_df : pd.DataFrame):
+        output_df = pd.DataFrame(columns=["x_init", "y_init", "x_final", "y_final"])
+        output_df["x_init"] = initial_df[0]
+        output_df["y_init"] = initial_df[1]
+        output_df["x_final"] = final_df[0]
+        output_df["y_final"] = final_df[1]
+
+        return output_df

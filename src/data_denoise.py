@@ -77,12 +77,21 @@ class DataDenoiser:
         # Report comparison between initial fit and denoised fit
         results_table = solution_check.run_comparison()
 
-        #Display Results
+        #Display and Export Results
         print("\n")
         print(results_table)
         print("\n")
+        print("The table above has been saved here: './output_csv_reports/'")
+        self.dataprocessor.export_csv_report(results_table, "results_comparison")
 
-        # Plot comparison
-        self.dataprocessor.plot_data()
+        # Plot comparison and generate csv report
+        self.dataprocessor.plot_data(export_plot=True)
+
+        init_df = self.dataprocessor.get_orig_data()
+        final_df = self.dataprocessor.get_denoise_data()
+        data_csv_report = solution_check.build_compare_df(init_df, final_df)
+        self.dataprocessor.export_csv_report(data_csv_report, "plot_data_comparison")
+        print("Solution Data (before and after outlier removal) has been saved here: ")
+        print("     './output_csv_reports/'\n\n")
         print("Returning to Data Processing Menu . . . ")
         sleep(4)
