@@ -37,5 +37,5 @@ jobs:
                 push: true # Set to true to push the image
                 tags: ${{ steps.meta.outputs.tags }}
                 labels: ${{ steps.meta.outputs.labels }}
-                cache-from: type=registry
-                cache-to: type=registry,mode=max
+                cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache
+                cache-to: type=registry,ref=ghcr.io/${{ github.repository }}:buildcache,mode=max
