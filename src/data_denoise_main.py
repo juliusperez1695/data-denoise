@@ -1,5 +1,5 @@
 '''
-<insert necessary documentation here>
+v0.1.0
 '''
 
 from user_interface import DataDenoiseUI
