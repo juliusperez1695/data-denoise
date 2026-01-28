@@ -1,0 +1,13 @@
+# data-denoise-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-denoise-service
+spec:
+  selector:
+    app: data-denoise # Matches the 'app' label in your Deployment's template
+  type: LoadBalancer # Use NodePort for local/on-premise clusters if needed
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80 # Matches the containerPort in your Deployment

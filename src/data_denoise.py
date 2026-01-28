@@ -1,5 +1,7 @@
 '''
-<insert helpful documentation here>
+data_denoise.py
+
+Description: This class defines the High-level functionality of the Data Denoise application.
 '''
 
 from time import sleep
@@ -11,7 +13,8 @@ from solution_checker import SolutionChecker
 ################################
 class DataDenoiser:
     '''
-    <insert helpful documentation here>
+    A class for initiating actions requested by the user and for performing the high-level functions
+    which are expected of the application.
     '''
     def __init__(self):
         self.dataprocessor = DataProcessor()
@@ -19,7 +22,13 @@ class DataDenoiser:
 
     def import_data(self):
         ''' Calls the necessary function for importing user data '''
-        self.dataprocessor.import_csv_data(self.get_data_filepath())
+        valid_path = False
+        while not valid_path:
+            try:
+                self.dataprocessor.import_csv_data(self.get_data_filepath())
+            except(FileNotFoundError, IOError):
+                print("Invalid File Path - try again.")
+                continue
         print("\nSuccessfully imported data!")
         sleep(1.5)
 

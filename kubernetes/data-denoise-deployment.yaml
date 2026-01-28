@@ -1,0 +1,20 @@
+# data-denoise-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-denoise-deployment
+spec:
+  replicas: 1 # You can increase this number for more instances
+  selector:
+    matchLabels:
+      app: data-denoise
+  template:
+    metadata:
+      labels:
+        app: data-denoise
+    spec:
+      containers:
+      - name: ddn-0-1-0-c1
+        image: juliusperez/data-denoise:0.1.0
+        ports:
+        - containerPort: 80 # Replace with the port your application listens on
