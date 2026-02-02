@@ -2,19 +2,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: data-denoise-deployment
+  name: data-denoise-app
 spec:
-  replicas: 1 # You can increase this number for more instances
   selector:
     matchLabels:
-      app: data-denoise
+      app: data-denoise-app
+  replicas: 1 # You can increase this for more pods
   template:
     metadata:
       labels:
-        app: data-denoise
+        app: data-denoise-app
     spec:
       containers:
-      - name: ddn-0-1-0-c1
-        image: juliusperez/data-denoise:0.1.0
+      - name: data-denoise-container
+        image: juliusperez/data-denoise:latest
         ports:
-        - containerPort: 80 # Replace with the port your application listens on
+        - containerPort: 80 # The port your Python app listens on
+        #command: ["/bin/bash", "-c", "tail -f /dev/null"] # Keeps the container running
+        stdin: true # Keep STDIN open
+        tty: true   # Allocate a TT

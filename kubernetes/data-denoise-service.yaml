@@ -5,7 +5,7 @@ metadata:
   name: data-denoise-service
 spec:
   selector:
-    app: data-denoise # Matches the 'app' label in your Deployment's template
+    app: data-denoise-app # Matches the 'app' label in your Deployment's template
   type: LoadBalancer # Use NodePort for local/on-premise clusters if needed
   ports:
     - protocol: TCP
