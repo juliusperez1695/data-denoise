@@ -26,6 +26,7 @@ class DataDenoiser:
         while not valid_path:
             try:
                 self.dataprocessor.import_csv_data(self.get_data_filepath())
+                valid_path = True
             except(FileNotFoundError, IOError):
                 print("Invalid File Path - try again.")
                 continue

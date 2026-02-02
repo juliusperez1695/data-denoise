@@ -13,4 +13,5 @@ src/DataDenoise.egg-info/entry_points.txt
 src/DataDenoise.egg-info/requires.txt
 src/DataDenoise.egg-info/top_level.txt
 tests/test_data_import.py
+tests/test_fit_results.py
 tests/test_outlier_identification.py
