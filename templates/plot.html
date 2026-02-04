@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+    <title>Interactive Plot</title>
+    <!-- Import Plotly.js library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Interactive Plot from CSV Data</h1>
+    <!-- Div where the plot will be rendered -->
+    <div id="chart" class="chart"></div>
+
+    <script>
+        // Get the graph JSON data passed from the Flask app
+        var graph = {{ graphJSON | safe}};
+        // Render the plot using Plotly.js
+        Plotly.newPlot('chart', graph.data, graph.layout);
+    </script>
+    <br>
+    <a href="/">Upload another file</a>
+</body>
+</html>

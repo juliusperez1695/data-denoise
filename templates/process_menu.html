@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <script src="{{ url_for('static', filename='js/process_menu.js') }}"></script>
+        <title>Data Denoise</title>
+        <!-- Import Plotly.js library -->
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    </head>
+    <body>
+        <!--Grid Container-->
+        <div id="pageContainer">
+            <div id="cell_1">
+                <div id="pageNameSection">
+                    <h1><i>Data Denoise</i></h1>
+                    <p id="operation"><i>Outlier Removal</i></p>
+                </div>
+                <div id="navSection">
+                    <nav>
+                        <ul id="navBar">
+                            <li id="navItem"><a href="index.html">Home</a></li>
+                            <li id="navItem"><a href="main_menu.html">Outlier Removal</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div id="cell_2_menu">
+                <div id="menu">
+                    <select name="procMenuList" id="procMenuList" onLoad="selectionHandler()" onChange="selectionHandler()">
+                        <option value="procChoice1">Plot Data</option>
+                        <option value="procChoice2">Handle Outliers</option>
+                        <option value="procChoice3">Check Solution</option>
+                        <option value="procChoice4">Return To Main Menu</option>
+                    </select>
+                </div>
+                <div id="menuChoice">
+                    <!-- Div where the plot will be rendered -->
+                    <div id="chart" class="menu-div-container"></div>
+                        <script>
+                            // Get the graph JSON data passed from the Flask app
+                            var graph = {{ graphJSON | safe}};
+                            // Render the plot using Plotly.js
+                            Plotly.newPlot('chart', graph.data, graph.layout);
+                        </script>
+                    <br>
+                    
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

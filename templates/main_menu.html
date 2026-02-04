@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <script src="{{ url_for('static', filename='js/main_menu.js') }}"></script>
+        <title>Data Denoise</title>
+    </head>
+    <body>
+        <!--Grid Container-->
+        <div id="pageContainer">
+            <div id="cell_1">
+                <div id="pageNameSection">
+                    <h1><i>Data Denoise</i></h1>
+                    <p id="operation"><i>Outlier Removal</i></p>
+                </div>
+                <div id="navSection">
+                    <nav>
+                        <ul id="navBar">
+                            <li id="navItem"><a href="index.html">Home</a></li>
+                            <li id="navItem"><a href="main_menu.html">Outlier Removal</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div id="cell_2_menu">
+                <div id="menu">
+                    <select name="mainMenuList" id="mainMenuList" onLoad="selectionHandler()" onChange="selectionHandler()">
+                        <option value="mainChoice1">Import Data</option>
+                        <!--<option value="mainChoice2">Process Data</option>-->
+                    </select>
+                </div>
+                <div id="menuChoice">
+                    <form id="import_form" class="form-container" method="POST" action="/" enctype="multipart/form-data">
+                        <input type="file" name="file">
+                        <input type="submit" value="Upload">
+                    </form>
+                    <!--
+                    <form id="process_form" class="form-container" method="POST" action="/" enctype="multipart/form-data">
+                        <input type="submit" value="Go!">
+                    </form>-->
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
