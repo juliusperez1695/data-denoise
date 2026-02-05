@@ -18,3 +18,4 @@ If developers wish to contribute and improve the existing python codebase, pleas
 ```
 git checkout -b feature-add-new-models-for-fitting
 ```
+If you are a user and have discovered a bug or would like to request a new feature to be implemented, please utilize the Issues tab of the repository and be as descriptive as possible.  The goal is not only to maintain functionality but continously improve this codebase for its intended purpose, so all constructive feedback is welcome!
